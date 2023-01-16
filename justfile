@@ -7,6 +7,32 @@ default_variant := "silverblue"
 # Current default in Pungi
 force_nocache := "true"
 
+# Just doesn't have a native dict type, but quoted bash dictionary works fine
+pretty_names := '(
+    [silverblue]="Silverblue"
+    [kinoite]="Kinoite"
+    [kinoite-nightly]="Kinoite"
+    [kinoite-beta]="Kinoite"
+    [sericea]="Sericea"
+    [onyx]="Onyx"
+    [vauxite]="Vauxite"
+    [lazurite]="Lazurite"
+    [base]="Base"
+)'
+
+# subset of the map from https://pagure.io/pungi-fedora/blob/main/f/general.conf
+volume_id_substitutions := '(
+    [silverblue]="SB"
+    [kinoite]="Kin"
+    [kinoite-nightly]="Kin"
+    [kinoite-beta]="Kin"
+    [sericea]="Src"
+    [onyx]="Onyx"
+    [vauxite]="Vxt"
+    [lazurite]="Lzr"
+    [base]="Base"
+)'
+
 # Default is to only validate the manifests
 all: validate
 
@@ -50,34 +76,13 @@ manifest variant=default_variant:
     #!/bin/bash
     set -euxo pipefail
 
+    declare -A pretty_names={{pretty_names}}
     variant={{variant}}
-    case "${variant}" in
-        "silverblue")
-            variant_pretty="Silverblue"
-            ;;
-        "kinoite"|"kinoite-nightly"|"kinoite-beta")
-            variant_pretty="Kinoite"
-            ;;
-        "sericea")
-            variant_pretty="Sericea"
-            ;;
-        "onyx")
-            variant_pretty="Onyx"
-            ;;
-        "vauxite")
-            variant_pretty="Vauxite"
-            ;;
-        "lazurite")
-            variant_pretty="Lazurite"
-            ;;
-        "base")
-            variant_pretty="Base"
-            ;;
-        "*")
-            echo "Unknown variant"
-            exit 1
-            ;;
-    esac
+    variant_pretty=${pretty_names[$variant]-}
+    if [[ -z $variant_pretty ]]; then
+        echo "Unknown variant"
+        exit 1
+    fi
 
     rpm-ostree compose tree --print-only --repo=repo fedora-{{variant}}.yaml
 
@@ -89,34 +94,13 @@ compose-legacy variant=default_variant:
     #!/bin/bash
     set -euxo pipefail
 
+    declare -A pretty_names={{pretty_names}}
     variant={{variant}}
-    case "${variant}" in
-        "silverblue")
-            variant_pretty="Silverblue"
-            ;;
-        "kinoite"|"kinoite-nightly"|"kinoite-beta")
-            variant_pretty="Kinoite"
-            ;;
-        "sericea")
-            variant_pretty="Sericea"
-            ;;
-        "onyx")
-            variant_pretty="Onyx"
-            ;;
-        "vauxite")
-            variant_pretty="Vauxite"
-            ;;
-        "lazurite")
-            variant_pretty="Lazurite"
-            ;;
-        "base")
-            variant_pretty="Base"
-            ;;
-        "*")
-            echo "Unknown variant"
-            exit 1
-            ;;
-    esac
+    variant_pretty=${pretty_names[$variant]-}
+    if [[ -z $variant_pretty ]]; then
+        echo "Unknown variant"
+        exit 1
+    fi
 
     ./ci/validate > /dev/null || (echo "Failed manifest validation" && exit 1)
 
@@ -162,34 +146,13 @@ compose-image variant=default_variant:
     #!/bin/bash
     set -euxo pipefail
 
+    declare -A pretty_names={{pretty_names}}
     variant={{variant}}
-    case "${variant}" in
-        "silverblue")
-            variant_pretty="Silverblue"
-            ;;
-        "kinoite"|"kinoite-nightly"|"kinoite-beta")
-            variant_pretty="Kinoite"
-            ;;
-        "sericea")
-            variant_pretty="Sericea"
-            ;;
-        "onyx")
-            variant_pretty="Onyx"
-            ;;
-        "vauxite")
-            variant_pretty="Vauxite"
-            ;;
-        "lazurite")
-            variant_pretty="Lazurite"
-            ;;
-        "base")
-            variant_pretty="Base"
-            ;;
-        "*")
-            echo "Unknown variant"
-            exit 1
-            ;;
-    esac
+    variant_pretty=${pretty_names[$variant]-}
+    if [[ -z $variant_pretty ]]; then
+        echo "Unknown variant"
+        exit 1
+    fi
 
     ./ci/validate > /dev/null || (echo "Failed manifest validation" && exit 1)
 
@@ -254,41 +217,15 @@ lorax variant=default_variant:
     # Do not create the iso directory or lorax will fail
     mkdir -p tmp cache/lorax
 
+    declare -A pretty_names={{pretty_names}}
+    declare -A volume_id_substitutions={{volume_id_substitutions}}
     variant={{variant}}
-    case "${variant}" in
-        "silverblue")
-            variant_pretty="Silverblue"
-            volid_sub="SB"
-            ;;
-        "kinoite"|"kinoite-nightly"|"kinoite-beta")
-            variant_pretty="Kinoite"
-            volid_sub="Knt"
-            ;;
-        "sericea")
-            variant_pretty="Sericea"
-            volid_sub="Src"
-            ;;
-        "onyx")
-            variant_pretty="Onyx"
-            volid_sub="Onyx"
-            ;;
-        "vauxite")
-            variant_pretty="Vauxite"
-            volid_sub="Vxt"
-            ;;
-        "lazurite")
-            variant_pretty="Lazurite"
-            volid_sub="Lzr"
-            ;;
-        "base")
-            variant_pretty="Base"
-            volid_sub="Base"
-            ;;
-        "*")
-            echo "Unknown variant"
-            exit 1
-            ;;
-    esac
+    variant_pretty=${pretty_names[$variant]-}
+    volid_sub=${volume_id_substitutions[$variant]-}
+    if [[ -z $variant_pretty ]] || [[ -z $volid_sub ]]; then
+        echo "Unknown variant"
+        exit 1
+    fi
 
     if [[ ! -d fedora-lorax-templates ]]; then
         git clone https://pagure.io/fedora-lorax-templates.git
@@ -371,34 +308,13 @@ upload-container variant=default_variant:
     #!/bin/bash
     set -euxo pipefail
 
+    declare -A pretty_names={{pretty_names}}
     variant={{variant}}
-    case "${variant}" in
-        "silverblue")
-            variant_pretty="Silverblue"
-            ;;
-        "kinoite"|"kinoite-nightly"|"kinoite-beta")
-            variant_pretty="Kinoite"
-            ;;
-        "sericea")
-            variant_pretty="Sericea"
-            ;;
-        "onyx")
-            variant_pretty="Onyx"
-            ;;
-        "vauxite")
-            variant_pretty="Vauxite"
-            ;;
-        "lazurite")
-            variant_pretty="Lazurite"
-            ;;
-        "base")
-            variant_pretty="Base"
-            ;;
-        "*")
-            echo "Unknown variant"
-            exit 1
-            ;;
-    esac
+    variant_pretty=${pretty_names[$variant]-}
+    if [[ -z $variant_pretty ]]; then
+        echo "Unknown variant"
+        exit 1
+    fi
 
     if [[ -z ${CI_REGISTRY_USER+x} ]] || [[ -z ${CI_REGISTRY_PASSWORD+x} ]]; then
         echo "Skipping artifact archiving: Not in CI"
