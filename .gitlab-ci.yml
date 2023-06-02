@@ -1,0 +1,28 @@
+# SPDX-License-Identifier: MIT
+
+# Only used in https://gitlab.com/fedora/ostree/ci-test
+# For tests running in the Fedora infrastructure, see .zuul.yaml and
+# https://fedoraproject.org/wiki/Zuul-based-ci
+
+# See: https://gitlab.com/fedora/ostree/buildroot
+image: quay.io/fedora-ostree-desktops/buildroot
+
+stages:
+  - build
+
+# As those are not official images, we build all available variants
+build:
+  stage: build
+  script:
+    - just compose-image $VARIANT
+    - just upload-container $VARIANT
+  parallel:
+    matrix:
+    - VARIANT:
+      - silverblue
+      - kinoite
+      - sericea
+      - vauxite
+      - lazurite
+      - onyx
+      - base
