@@ -1,0 +1,6 @@
+[fedora-40]
+name=Fedora 40 $basearch
+mirrorlist=https://mirrors.fedoraproject.org/metalink?repo=fedora-40&arch=$basearch
+enabled=1
+gpgcheck=1
+metadata_expire=1d
