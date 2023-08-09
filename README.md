@@ -70,6 +70,34 @@ sudo rpm-ostree rebase testremote:fedora/rawhide/x86_64/silverblue
 # Reboot and test!
 ```
 
+## Branching instructions for new Fedora releases
+
+Follow those steps during the Fedora branch process in Fedora:
+
+### Fedora Ansible
+
+Make a PR similar to
+[ansible#1318](https://pagure.io/fedora-infra/ansible/pull-request/1318) in
+[fedora-infra/ansible](https://pagure.io/fedora-infra/ansible).
+
+### On Rawhide / main branch
+
+```
+sed -i "s/40/41/g" *.repo *.yaml comps-sync.py
+mv fedora-40.repo fedora-41.repo
+mv fedora-40-updates.repo fedora-41-updates.repo
+sed -i "s/41/42/g" README.md
+sed -i "s/40/41/g" README.md
+```
+
+### On the new branch (f40)
+
+```
+rm fedora-rawhide.repo
+sed -i "/- fedora-rawhide/d" *.yaml
+sed -i "/# - fedora-40/- fedora-40/" *.yaml
+```
+
 ## Historical references
 
 Building and testing instructions:
