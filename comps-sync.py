@@ -1,41 +1,55 @@
 #!/usr/bin/python3
-# Usage: ./comps-sync.py /path/to/comps-f39.xml.in
-#
-# Can both remove packages from the manifest
-# which are not mentioned in comps, and add packages from
-# comps.
 
-import os, sys, subprocess, argparse, shlex, json, yaml, re
+'''
+Usage: ./comps-sync.py /path/to/comps-f39.xml.in
+
+Can both remove packages from the manifest which are not mentioned in comps,
+and add packages from comps.
+'''
+
+import argparse
+import re
+import sys
+import yaml
 import libcomps
 
 ARCHES = ("x86_64", "aarch64", "ppc64le")
 
 def fatal(msg):
-    print >>sys.stderr, msg
+    '''Print the error message and exit.'''
+    print(msg, file = sys.stderr)
     sys.exit(1)
 
-def format_pkgtype(n):
-    if n == libcomps.PACKAGE_TYPE_DEFAULT:
+def format_pkgtype(pkgtype):
+    '''Return a printable string from a libcomps package type.'''
+    if pkgtype == libcomps.PACKAGE_TYPE_DEFAULT:
         return 'default'
-    elif n == libcomps.PACKAGE_TYPE_MANDATORY:
+    if pkgtype == libcomps.PACKAGE_TYPE_MANDATORY:
         return 'mandatory'
-    else:
-        assert False
+    assert False
 
 def write_manifest(fpath, pkgs, include=None):
-    with open(fpath, 'w') as f:
+    '''Write the package list in a manifest.'''
+    with open(fpath, 'w', encoding='UTF-8') as f:
         f.write("# DO NOT EDIT! This content is generated from comps-sync.py\n")
         if include is not None:
-            f.write("include: {}\n".format(include))
+            f.write(f'include: {include}\n')
         f.write("packages:\n")
         for pkg in sorted(pkgs['all']):
-            f.write("  - {}\n".format(pkg))
+            f.write(f'  - {pkg}\n')
         for arch in ARCHES:
             if pkgs[arch]:
                 f.write(f"packages-{arch}:\n")
                 for pkg in sorted(pkgs[arch]):
-                    f.write("  - {}\n".format(pkg))
-        print("Wrote {}".format(fpath))
+                    f.write(f'  - {pkg}\n')
+        print(f'Wrote {fpath}')
+
+def is_exclude_listed(pkgname):
+    '''Check if pkgname is in the exclude list.'''
+    for br in comps_exclude_list_all:
+        if br.match(pkgname):
+            return True
+    return False
 
 parser = argparse.ArgumentParser()
 parser.add_argument("--save", help="Write changes", action='store_true')
@@ -46,7 +60,7 @@ args = parser.parse_args()
 print("Syncing packages common to all desktops:")
 
 base_pkgs_path = 'fedora-common-ostree-pkgs.yaml'
-with open(base_pkgs_path) as f:
+with open(base_pkgs_path, encoding='UTF-8') as f:
     manifest = yaml.safe_load(f)
 manifest_packages = {}
 manifest_packages['all'] = set(manifest['packages'])
@@ -56,19 +70,13 @@ for arch in ARCHES:
     else:
         manifest_packages[arch] = set()
 
-with open('comps-sync-exclude-list.yml') as f:
+with open('comps-sync-exclude-list.yml', encoding='UTF-8') as f:
     doc = yaml.safe_load(f)
     comps_exclude_list = doc['exclude_list']
     comps_include_list = doc['include_list']
     comps_exclude_list_groups = doc['exclude_list_groups']
     comps_desktop_exclude_list = doc['desktop_exclude_list']
     comps_exclude_list_all = [re.compile(x) for x in doc['exclude_list_all_regexp']]
-
-def is_exclude_listed(pkgname):
-    for br in comps_exclude_list_all:
-        if br.match(pkgname):
-            return True
-    return False
 
 # Parse comps, and build up a set of all packages so we
 # can find packages not listed in comps *at all*, beyond
@@ -128,9 +136,9 @@ n_manifest_new = len(comps_unknown)
 if n_manifest_new == 0:
     print("  - All manifest packages are already listed in comps.")
 else:
-    print("  - {} packages not in {}:".format(n_manifest_new, ws_env_name))
+    print(f'  - {n_manifest_new} packages not in {ws_env_name}:')
     for (pkg, arch) in sorted(comps_unknown, key = lambda x: x[0]):
-        print('    {} (arch: {})'.format(pkg, arch))
+        print(f'    {pkg} (arch: {arch})')
         manifest_packages[arch].remove(pkg)
 
 # Look for packages in workstation but not in the manifest
@@ -153,7 +161,7 @@ n_comps_new = len(ws_added)
 if n_comps_new == 0:
     print("  - All comps packages are already listed in manifest.")
 else:
-    print("  - {} packages not in manifest:".format(n_comps_new))
+    print(f'  - {n_comps_new} packages not in manifest:')
     for pkg in sorted(ws_added):
         (req, groups, arches) = ws_added[pkg]
         print('    {} ({}, groups: {}, arches: {})'.format(pkg, format_pkgtype(req), ', '.join(groups), ', '.join(arches)))
@@ -177,9 +185,9 @@ desktops_comps_groups = {
 # Generate treefiles for all desktops
 for desktop, groups in desktops_comps_groups.items():
     print()
-    print("Syncing packages for {}:".format(desktop))
+    print(f'Syncing packages for {desktop}:')
 
-    manifest_path = '{}-desktop-pkgs.yaml'.format(desktop)
+    manifest_path = f'{desktop}-desktop-pkgs.yaml'
     with open(manifest_path, encoding='UTF-8') as f:
         manifest = yaml.safe_load(f)
     manifest_packages = {}
@@ -221,9 +229,9 @@ for desktop, groups in desktops_comps_groups.items():
     if n_manifest_new == 0:
         print("  - All manifest packages are already listed in comps.")
     else:
-        print("  - {} packages not in {}:".format(n_manifest_new, ws_env_name))
+        print(f'  - {n_manifest_new} packages not in {ws_env_name}:')
         for (pkg, arch) in sorted(comps_unknown, key = lambda x: x[0]):
-            print('    {} (arch: {})'.format(pkg, arch))
+            print(f'    {pkg} (arch: {arch})')
             manifest_packages[arch].remove(pkg)
 
 
@@ -247,7 +255,7 @@ for desktop, groups in desktops_comps_groups.items():
     if n_comps_new == 0:
         print("  - All comps packages are already listed in manifest.")
     else:
-        print("  - {} packages not in {} manifest:".format(n_comps_new, desktop))
+        print(f'  - {n_comps_new} packages not in {desktop} manifest:')
         for pkg in sorted(desktop_pkgs_added):
             arches = desktop_pkgs_added[pkg]
             print('    {} (arches: {})'.format(pkg, ', '.join(arches)))
