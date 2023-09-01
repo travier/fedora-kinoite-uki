@@ -30,7 +30,6 @@ packages:
   - buildah
   - podman
   - skopeo
-  - toolbox
   # Provides terminal tools like clear, reset, tput, and tset
   - ncurses
   # Flatpak support
