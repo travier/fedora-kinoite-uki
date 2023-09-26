@@ -51,6 +51,19 @@ def is_exclude_listed(pkgname):
             return True
     return False
 
+def load_packages_from_manifest(manifest_path):
+    '''Load the list of packages from an rpm-ostree manifest file.'''
+    with open(manifest_path, encoding='UTF-8') as f:
+        manifest = yaml.safe_load(f)
+    manifest_packages = {}
+    manifest_packages['all'] = set(manifest['packages'])
+    for arch in ARCHES:
+        if f'packages-{arch}' in manifest:
+            manifest_packages[arch] = set(manifest[f'packages-{arch}'])
+        else:
+            manifest_packages[arch] = set()
+    return manifest_packages
+
 parser = argparse.ArgumentParser()
 parser.add_argument("--save", help="Write changes", action='store_true')
 parser.add_argument("src", help="Source path")
@@ -59,16 +72,8 @@ args = parser.parse_args()
 
 print("Syncing packages common to all desktops:")
 
-base_pkgs_path = 'fedora-common-ostree-pkgs.yaml'
-with open(base_pkgs_path, encoding='UTF-8') as f:
-    manifest = yaml.safe_load(f)
-manifest_packages = {}
-manifest_packages['all'] = set(manifest['packages'])
-for arch in ARCHES:
-    if f'packages-{arch}' in manifest:
-        manifest_packages[arch] = set(manifest[f'packages-{arch}'])
-    else:
-        manifest_packages[arch] = set()
+manifest_path = 'fedora-common-ostree-pkgs.yaml'
+manifest_packages = load_packages_from_manifest(manifest_path)
 
 with open('comps-sync-exclude-list.yml', encoding='UTF-8') as f:
     doc = yaml.safe_load(f)
@@ -167,7 +172,7 @@ else:
         print('    {} ({}, groups: {}, arches: {})'.format(pkg, format_pkgtype(req), ', '.join(groups), ', '.join(arches)))
 
 if (n_manifest_new > 0 or n_comps_new > 0) and args.save:
-    write_manifest(base_pkgs_path, manifest_packages)
+    write_manifest(manifest_path, manifest_packages)
 
 # List of comps groups used for each desktop
 desktops_comps_groups = {
@@ -188,15 +193,7 @@ for desktop, groups in desktops_comps_groups.items():
     print(f'Syncing packages for {desktop}:')
 
     manifest_path = f'{desktop}-desktop-pkgs.yaml'
-    with open(manifest_path, encoding='UTF-8') as f:
-        manifest = yaml.safe_load(f)
-    manifest_packages = {}
-    manifest_packages['all'] = set(manifest['packages'])
-    for arch in ARCHES:
-        if f'packages-{arch}' in manifest:
-            manifest_packages[arch] = set(manifest[f'packages-{arch}'])
-        else:
-            manifest_packages[arch] = set()
+    manifest_packages = load_packages_from_manifest(manifest_path)
 
     # Filter packages in the comps desktop group using the exclude_list
     comps_group_pkgs = {}
