@@ -64,6 +64,28 @@ def load_packages_from_manifest(manifest_path):
             manifest_packages[arch] = set()
     return manifest_packages
 
+def load_packages_from_comps_group(comps_group_packages, comps, groupname, exclude_list, exclude_list_regexp):
+    '''Load packages from a comps group, storing the group, type and arches.'''
+    for arch in ARCHES:
+        filtered = comps.arch_filter([arch])
+        group = filtered.groups_match(id=groupname)[0]
+        for pkg in group.packages:
+            pkgname = pkg.name
+            if pkg.type not in (libcomps.PACKAGE_TYPE_DEFAULT,
+                                libcomps.PACKAGE_TYPE_MANDATORY):
+                continue
+            if pkgname in exclude_list or is_exclude_listed(pkgname, exclude_list_regexp):
+                continue
+            pkgdata = comps_group_packages.get(pkgname)
+            if pkgdata is None:
+                comps_group_packages[pkgname] = pkgdata = (pkg.type, set([groupname]), set([arch]))
+            if (pkgdata[0] == libcomps.PACKAGE_TYPE_DEFAULT and
+                pkg.type == libcomps.PACKAGE_TYPE_MANDATORY):
+                comps_group_packages[pkgname] = pkgdata = (pkg.type, pkgdata[1], pkgdata[2])
+            pkgdata[1].add(groupname)
+            pkgdata[2].add(arch)
+    return comps_group_packages
+
 parser = argparse.ArgumentParser()
 parser.add_argument("--save", help="Write changes", action='store_true')
 parser.add_argument("src", help="Source path")
@@ -99,24 +121,7 @@ for gid in ws_environ.group_ids:
     if gid.name in comps_exclude_list_groups:
         continue
     exclude_list = comps_exclude_list.get(gid.name, set())
-    for arch in ARCHES:
-        filtered = comps.arch_filter([arch])
-        group = filtered.groups_match(id=gid.name)[0]
-        for pkg in group.packages:
-            pkgname = pkg.name
-            if pkg.type not in (libcomps.PACKAGE_TYPE_DEFAULT,
-                                libcomps.PACKAGE_TYPE_MANDATORY):
-                continue
-            if pkgname in exclude_list or is_exclude_listed(pkgname):
-                continue
-            pkgdata = ws_pkgs.get(pkgname)
-            if pkgdata is None:
-                ws_pkgs[pkgname] = pkgdata = (pkg.type, set([gid.name]), set([arch]))
-            if (pkgdata[0] == libcomps.PACKAGE_TYPE_DEFAULT and
-                pkg.type == libcomps.PACKAGE_TYPE_MANDATORY):
-                ws_pkgs[pkgname] = pkgdata = (pkg.type, pkgdata[1], pkgdata[2])
-            pkgdata[1].add(gid.name)
-            pkgdata[2].add(arch)
+    ws_pkgs = load_packages_from_comps_group(ws_pkgs, comps, gid.name, exclude_list, comps_exclude_list_all)
 
 ws_ostree_pkgs = set()
 for pkg in comps.groups_match(id=ws_ostree_name)[0].packages:
