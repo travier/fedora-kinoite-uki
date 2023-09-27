@@ -192,72 +192,34 @@ desktops_comps_groups = {
 # Generate treefiles for all desktops
 for desktop, groups in desktops_comps_groups.items():
     print()
-    print(f'Syncing packages for {desktop}:')
 
     manifest_path = f'{desktop}-desktop-pkgs.yaml'
     manifest_packages = load_packages_from_manifest(manifest_path)
 
-    # Filter packages in the comps desktop group using the exclude_list
     comps_group_pkgs = {}
-    for arch in ARCHES:
-        filtered = comps.arch_filter([arch])
-        for group in groups:
-            for pkg in filtered.groups_match(id=group)[0].packages:
-                pkgname = pkg.name
-                exclude_list = comps_desktop_exclude_list.get(group, set())
-                if pkgname in exclude_list or is_exclude_listed(pkgname, comps_exclude_list_all):
-                    continue
-                if pkgname in comps_group_pkgs:
-                    comps_group_pkgs[pkgname].add(arch)
-                else:
-                    comps_group_pkgs[pkgname] = set([arch])
+    for group in groups:
+        exclude_list = comps_desktop_exclude_list.get(group, set())
+        comps_group_pkgs = load_packages_from_comps_group(comps_group_pkgs, comps, group, exclude_list, comps_exclude_list_all)
 
-    comps_unknown = set()
-    for arch in manifest_packages:
-        for pkg in manifest_packages[arch]:
-            if arch == "all":
-                if pkg in comps_group_pkgs and set(comps_group_pkgs[pkg]) == set(ARCHES):
-                    continue
-            else:
-                if pkg in comps_group_pkgs and arch in comps_group_pkgs[pkg]:
-                    continue
-            comps_unknown.add((pkg, arch))
+    (comps_unknown, pkgs_added) = compare_comps_manifest_package_lists(comps_group_pkgs, manifest_packages)
 
-    # Look for packages in the manifest but not in comps at all
     n_manifest_new = len(comps_unknown)
-    if n_manifest_new == 0:
-        print("  - All manifest packages are already listed in comps.")
-    else:
-        print(f'  - {n_manifest_new} packages not in {ws_env_name}:')
+    n_comps_new = len(pkgs_added)
+    print(f'Syncing packages for {desktop}:\t+{n_comps_new}, -{n_manifest_new}')
+    if n_manifest_new != 0:
         for (pkg, arch) in sorted(comps_unknown, key = lambda x: x[0]):
-            print(f'    {pkg} (arch: {arch})')
             manifest_packages[arch].remove(pkg)
-
-
-    # Look for packages in comps but not in the manifest
-    desktop_pkgs_added = {}
-    for (pkg, parches) in comps_group_pkgs.items():
-        if set(ARCHES) == set(parches):
-            if pkg not in manifest_packages['all']:
-                desktop_pkgs_added[pkg] = parches
+            print(f'  - {pkg} (arches: {arch})')
+    if n_comps_new != 0:
+        for pkg in sorted(pkgs_added):
+            (req, groups, arches) = pkgs_added[pkg]
+            if set(ARCHES) == arches:
                 manifest_packages['all'].add(pkg)
-        else:
-            for arch in parches:
-                if pkg not in manifest_packages[arch]:
+                print('  + {} ({}, groups: {}, arches: all)'.format(pkg, format_pkgtype(req), ', '.join(groups)))
+            else:
+                for arch in arches:
                     manifest_packages[arch].add(pkg)
-                    if pkg not in desktop_pkgs_added:
-                        desktop_pkgs_added[pkg] = set([arch])
-                    else:
-                        desktop_pkgs_added[pkg].add(arch)
-
-    n_comps_new = len(desktop_pkgs_added)
-    if n_comps_new == 0:
-        print("  - All comps packages are already listed in manifest.")
-    else:
-        print(f'  - {n_comps_new} packages not in {desktop} manifest:')
-        for pkg in sorted(desktop_pkgs_added):
-            arches = desktop_pkgs_added[pkg]
-            print('    {} (arches: {})'.format(pkg, ', '.join(arches)))
+                print('  + {} ({}, groups: {}, arches: {})'.format(pkg, format_pkgtype(req), ', '.join(groups), ', '.join(arches)))
 
     # Update manifest
     if (n_manifest_new > 0 or n_comps_new > 0) and args.save:
