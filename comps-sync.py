@@ -154,51 +154,55 @@ def update_manifests_from_groups(comps, groups, path, desktop, save, comps_exclu
         else:
             write_manifest(path, manifest_packages, include="fedora-common-ostree.yaml")
 
-parser = argparse.ArgumentParser()
-parser.add_argument("--save", help="Write changes", action='store_true')
-parser.add_argument("src", help="Source path")
+def main():
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--save", help="Write changes", action='store_true')
+    parser.add_argument("src", help="Source path")
 
-args = parser.parse_args()
+    args = parser.parse_args()
 
-with open('comps-sync-exclude-list.yml', encoding='UTF-8') as f:
-    doc = yaml.safe_load(f)
-    comps_exclude_list = doc['exclude_list']
-    comps_exclude_list_groups = doc['exclude_list_groups']
-    comps_desktop_exclude_list = doc['desktop_exclude_list']
-    comps_exclude_list_all = [re.compile(x) for x in doc['exclude_list_all_regexp']]
+    with open('comps-sync-exclude-list.yml', encoding='UTF-8') as f:
+        doc = yaml.safe_load(f)
+        comps_exclude_list = doc['exclude_list']
+        comps_exclude_list_groups = doc['exclude_list_groups']
+        comps_desktop_exclude_list = doc['desktop_exclude_list']
+        comps_exclude_list_all = [re.compile(x) for x in doc['exclude_list_all_regexp']]
 
-# Parse comps, and build up a set of all packages so we can find packages not
-# listed in comps *at all*, beyond just the workstation environment.
-comps = libcomps.Comps()
-comps.fromxml_f(args.src)
+    # Parse comps, and build up a set of all packages so we can find packages not
+    # listed in comps *at all*, beyond just the workstation environment.
+    comps = libcomps.Comps()
+    comps.fromxml_f(args.src)
 
-# Parse the workstation-product environment to get the list of comps groups to
-# get packages from.
-groups = []
-for gid in comps.environments['workstation-product-environment'].group_ids:
-    if gid.name in comps_exclude_list_groups:
-        continue
-    groups.append(gid.name)
+    # Parse the workstation-product environment to get the list of comps groups to
+    # get packages from.
+    groups = []
+    for gid in comps.environments['workstation-product-environment'].group_ids:
+        if gid.name in comps_exclude_list_groups:
+            continue
+        groups.append(gid.name)
 
-# Always include the packages from the workstation-ostree-support group
-groups.append('workstation-ostree-support')
+    # Always include the packages from the workstation-ostree-support group
+    groups.append('workstation-ostree-support')
 
-update_manifests_from_groups(comps, groups, 'fedora-common-ostree-pkgs.yaml', "common", args.save, comps_exclude_list, comps_exclude_list_all)
+    update_manifests_from_groups(comps, groups, 'fedora-common-ostree-pkgs.yaml', "common", args.save, comps_exclude_list, comps_exclude_list_all)
 
-# List of comps groups used for each desktop
-desktops_comps_groups = {
-    "gnome": ["gnome-desktop", "base-x"],
-    "kde": ["kde-desktop", "base-x"],
-    "xfce": ["xfce-desktop", "base-x"],
-    "lxqt": ["lxqt-desktop", "base-x"],
-    "deepin": ["deepin-desktop", "base-x"],
-    "mate": ["mate-desktop", "base-x"],
-    "sway": ["swaywm", "swaywm-extended"],
-    "cinnamon": ["cinnamon-desktop", "base-x"],
-    "budgie": ["budgie-desktop", "budgie-desktop-apps", "base-x"]
-}
+    # List of comps groups used for each desktop
+    desktops_comps_groups = {
+        "gnome": ["gnome-desktop", "base-x"],
+        "kde": ["kde-desktop", "base-x"],
+        "xfce": ["xfce-desktop", "base-x"],
+        "lxqt": ["lxqt-desktop", "base-x"],
+        "deepin": ["deepin-desktop", "base-x"],
+        "mate": ["mate-desktop", "base-x"],
+        "sway": ["swaywm", "swaywm-extended"],
+        "cinnamon": ["cinnamon-desktop", "base-x"],
+        "budgie": ["budgie-desktop", "budgie-desktop-apps", "base-x"]
+    }
 
-# Generate treefiles for all desktops
-for desktop, groups in desktops_comps_groups.items():
-    print()
-    update_manifests_from_groups(comps, groups, f'{desktop}-desktop-pkgs.yaml', desktop, args.save, comps_desktop_exclude_list, comps_exclude_list_all)
+    # Generate treefiles for all desktops
+    for desktop, groups in desktops_comps_groups.items():
+        print()
+        update_manifests_from_groups(comps, groups, f'{desktop}-desktop-pkgs.yaml', desktop, args.save, comps_desktop_exclude_list, comps_exclude_list_all)
+
+if __name__ == "__main__":
+    main()
