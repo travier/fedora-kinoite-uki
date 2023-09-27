@@ -44,9 +44,9 @@ def write_manifest(fpath, pkgs, include=None):
                     f.write(f'  - {pkg}\n')
         print(f'Wrote {fpath}')
 
-def is_exclude_listed(pkgname):
+def is_exclude_listed(pkgname, exclude_list_regexp):
     '''Check if pkgname is in the exclude list.'''
-    for br in comps_exclude_list_all:
+    for br in exclude_list_regexp:
         if br.match(pkgname):
             return True
     return False
@@ -120,7 +120,7 @@ for gid in ws_environ.group_ids:
 
 ws_ostree_pkgs = set()
 for pkg in comps.groups_match(id=ws_ostree_name)[0].packages:
-    if not is_exclude_listed(pkg.name):
+    if not is_exclude_listed(pkg.name, comps_exclude_list_all):
         ws_ostree_pkgs.add(pkg.name)
 
 comps_unknown = set()
@@ -203,7 +203,7 @@ for desktop, groups in desktops_comps_groups.items():
             for pkg in filtered.groups_match(id=group)[0].packages:
                 pkgname = pkg.name
                 exclude_list = comps_desktop_exclude_list.get(group, set())
-                if pkgname in exclude_list or is_exclude_listed(pkgname):
+                if pkgname in exclude_list or is_exclude_listed(pkgname, comps_exclude_list_all):
                     continue
                 if pkgname in comps_group_pkgs:
                     comps_group_pkgs[pkgname].add(arch)
