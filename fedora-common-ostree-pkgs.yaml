@@ -95,8 +95,6 @@ packages:
   - iwlwifi-dvm-firmware
   - iwlwifi-mvm-firmware
   - kbd
-  - kernel
-  - kernel-modules-extra
   - less
   - libertas-firmware
   - libglvnd-gles

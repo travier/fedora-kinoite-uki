@@ -100,7 +100,6 @@ manifest_packages = load_packages_from_manifest(manifest_path)
 with open('comps-sync-exclude-list.yml', encoding='UTF-8') as f:
     doc = yaml.safe_load(f)
     comps_exclude_list = doc['exclude_list']
-    comps_include_list = doc['include_list']
     comps_exclude_list_groups = doc['exclude_list_groups']
     comps_desktop_exclude_list = doc['desktop_exclude_list']
     comps_exclude_list_all = [re.compile(x) for x in doc['exclude_list_all_regexp']]
@@ -135,8 +134,7 @@ for arch in manifest_packages:
         else:
             if pkg in ws_pkgs and arch in ws_pkgs[pkg][2]:
                 continue
-        if (pkg not in comps_include_list):
-            comps_unknown.add((pkg, arch))
+        comps_unknown.add((pkg, arch))
 
 # Look for packages in the manifest but not in comps at all
 n_manifest_new = len(comps_unknown)

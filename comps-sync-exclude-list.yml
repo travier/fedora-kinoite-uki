@@ -1,12 +1,6 @@
 # This file has a list of packages to skip from comps that we don't want, plus
 # a few include listed things.
 
-# For some reason today these are just in livecd-tools...
-include_list:
-  - kernel
-  - kernel-modules
-  - kernel-modules-extra
-
 # Entirely skip all packages in libreoffice
 exclude_list_groups:
   - libreoffice
