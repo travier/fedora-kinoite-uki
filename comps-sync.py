@@ -116,14 +116,49 @@ def compare_comps_manifest_package_lists(comps_group_pkgs, manifest_packages):
 
     return comps_unknown, pkgs_added
 
+def update_manifests_from_groups(comps, groups, path, desktop, save, comps_exclude_list, comps_exclude_list_all):
+    manifest_packages = load_packages_from_manifest(path)
+
+    comps_group_pkgs = {}
+    for group in groups:
+        exclude_list = comps_exclude_list.get(group, set())
+        comps_group_pkgs = load_packages_from_comps_group(comps_group_pkgs, comps, group, exclude_list, comps_exclude_list_all)
+
+    (comps_unknown, pkgs_added) = compare_comps_manifest_package_lists(comps_group_pkgs, manifest_packages)
+
+    n_manifest_new = len(comps_unknown)
+    n_comps_new = len(pkgs_added)
+
+    if desktop == "common":
+        print(f'Syncing common packages:\t+{n_comps_new}, -{n_manifest_new}')
+    else:
+        print(f'Syncing packages for {desktop}:\t+{n_comps_new}, -{n_manifest_new}')
+    if n_manifest_new != 0:
+        for (pkg, arch) in sorted(comps_unknown, key = lambda x: x[0]):
+            manifest_packages[arch].remove(pkg)
+            print(f'  - {pkg} (arches: {arch})')
+    if n_comps_new != 0:
+        for pkg in sorted(pkgs_added):
+            (req, groups, arches) = pkgs_added[pkg]
+            if set(ARCHES) == arches:
+                manifest_packages['all'].add(pkg)
+                print('  + {} ({}, groups: {}, arches: all)'.format(pkg, format_pkgtype(req), ', '.join(groups)))
+            else:
+                for arch in arches:
+                    manifest_packages[arch].add(pkg)
+                print('  + {} ({}, groups: {}, arches: {})'.format(pkg, format_pkgtype(req), ', '.join(groups), ', '.join(arches)))
+
+    if (n_manifest_new > 0 or n_comps_new > 0) and save:
+        if desktop == "common":
+            write_manifest(path, manifest_packages)
+        else:
+            write_manifest(path, manifest_packages, include="fedora-common-ostree.yaml")
+
 parser = argparse.ArgumentParser()
 parser.add_argument("--save", help="Write changes", action='store_true')
 parser.add_argument("src", help="Source path")
 
 args = parser.parse_args()
-
-manifest_path = 'fedora-common-ostree-pkgs.yaml'
-manifest_packages = load_packages_from_manifest(manifest_path)
 
 with open('comps-sync-exclude-list.yml', encoding='UTF-8') as f:
     doc = yaml.safe_load(f)
@@ -148,34 +183,7 @@ for gid in comps.environments['workstation-product-environment'].group_ids:
 # Always include the packages from the workstation-ostree-support group
 groups.append('workstation-ostree-support')
 
-# Get the packages from those groups, filtering the ones we don't need
-comps_group_pkgs = {}
-for group in groups:
-    exclude_list = comps_exclude_list.get(group, set())
-    comps_group_pkgs = load_packages_from_comps_group(comps_group_pkgs, comps, group, exclude_list, comps_exclude_list_all)
-
-(comps_unknown, pkgs_added) = compare_comps_manifest_package_lists(comps_group_pkgs, manifest_packages)
-
-n_manifest_new = len(comps_unknown)
-n_comps_new = len(pkgs_added)
-print(f'Syncing common packages:\t+{n_comps_new}, -{n_manifest_new}')
-if n_manifest_new != 0:
-    for (pkg, arch) in sorted(comps_unknown, key = lambda x: x[0]):
-        manifest_packages[arch].remove(pkg)
-        print(f'  - {pkg} (arches: {arch})')
-if n_comps_new != 0:
-    for pkg in sorted(pkgs_added):
-        (req, groups, arches) = pkgs_added[pkg]
-        if set(ARCHES) == arches:
-            manifest_packages['all'].add(pkg)
-            print('  + {} ({}, groups: {}, arches: all)'.format(pkg, format_pkgtype(req), ', '.join(groups)))
-        else:
-            for arch in arches:
-                manifest_packages[arch].add(pkg)
-            print('  + {} ({}, groups: {}, arches: {})'.format(pkg, format_pkgtype(req), ', '.join(groups), ', '.join(arches)))
-
-if (n_manifest_new > 0 or n_comps_new > 0) and args.save:
-    write_manifest(manifest_path, manifest_packages)
+update_manifests_from_groups(comps, groups, 'fedora-common-ostree-pkgs.yaml', "common", args.save, comps_exclude_list, comps_exclude_list_all)
 
 # List of comps groups used for each desktop
 desktops_comps_groups = {
@@ -193,35 +201,4 @@ desktops_comps_groups = {
 # Generate treefiles for all desktops
 for desktop, groups in desktops_comps_groups.items():
     print()
-
-    manifest_path = f'{desktop}-desktop-pkgs.yaml'
-    manifest_packages = load_packages_from_manifest(manifest_path)
-
-    comps_group_pkgs = {}
-    for group in groups:
-        exclude_list = comps_desktop_exclude_list.get(group, set())
-        comps_group_pkgs = load_packages_from_comps_group(comps_group_pkgs, comps, group, exclude_list, comps_exclude_list_all)
-
-    (comps_unknown, pkgs_added) = compare_comps_manifest_package_lists(comps_group_pkgs, manifest_packages)
-
-    n_manifest_new = len(comps_unknown)
-    n_comps_new = len(pkgs_added)
-    print(f'Syncing packages for {desktop}:\t+{n_comps_new}, -{n_manifest_new}')
-    if n_manifest_new != 0:
-        for (pkg, arch) in sorted(comps_unknown, key = lambda x: x[0]):
-            manifest_packages[arch].remove(pkg)
-            print(f'  - {pkg} (arches: {arch})')
-    if n_comps_new != 0:
-        for pkg in sorted(pkgs_added):
-            (req, groups, arches) = pkgs_added[pkg]
-            if set(ARCHES) == arches:
-                manifest_packages['all'].add(pkg)
-                print('  + {} ({}, groups: {}, arches: all)'.format(pkg, format_pkgtype(req), ', '.join(groups)))
-            else:
-                for arch in arches:
-                    manifest_packages[arch].add(pkg)
-                print('  + {} ({}, groups: {}, arches: {})'.format(pkg, format_pkgtype(req), ', '.join(groups), ', '.join(arches)))
-
-    # Update manifest
-    if (n_manifest_new > 0 or n_comps_new > 0) and args.save:
-        write_manifest(manifest_path, manifest_packages, include="fedora-common-ostree.yaml")
+    update_manifests_from_groups(comps, groups, f'{desktop}-desktop-pkgs.yaml', desktop, args.save, comps_desktop_exclude_list, comps_exclude_list_all)
