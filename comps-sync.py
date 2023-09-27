@@ -123,10 +123,8 @@ for gid in ws_environ.group_ids:
     exclude_list = comps_exclude_list.get(gid.name, set())
     ws_pkgs = load_packages_from_comps_group(ws_pkgs, comps, gid.name, exclude_list, comps_exclude_list_all)
 
-ws_ostree_pkgs = set()
-for pkg in comps.groups_match(id=ws_ostree_name)[0].packages:
-    if not is_exclude_listed(pkg.name, comps_exclude_list_all):
-        ws_ostree_pkgs.add(pkg.name)
+exclude_list = comps_exclude_list.get(ws_ostree_name, set())
+ws_pkgs = load_packages_from_comps_group(ws_pkgs, comps, ws_ostree_name, exclude_list, comps_exclude_list_all)
 
 comps_unknown = set()
 for arch in manifest_packages:
@@ -137,8 +135,7 @@ for arch in manifest_packages:
         else:
             if pkg in ws_pkgs and arch in ws_pkgs[pkg][2]:
                 continue
-        if (pkg not in comps_include_list and
-            pkg not in ws_ostree_pkgs):
+        if (pkg not in comps_include_list):
             comps_unknown.add((pkg, arch))
 
 # Look for packages in the manifest but not in comps at all

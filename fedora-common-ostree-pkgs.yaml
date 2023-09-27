@@ -119,6 +119,7 @@ packages:
   - opensc
   - openssh-clients
   - openssh-server
+  - ostree-grub2
   - pam_afs_session
   - paps
   - passwd
@@ -147,6 +148,7 @@ packages:
   - realtek-firmware
   - rootfiles
   - rpm
+  - rpm-ostree
   - rsync
   - samba-client
   - selinux-policy-targeted
