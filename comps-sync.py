@@ -132,28 +132,29 @@ with open('comps-sync-exclude-list.yml', encoding='UTF-8') as f:
     comps_desktop_exclude_list = doc['desktop_exclude_list']
     comps_exclude_list_all = [re.compile(x) for x in doc['exclude_list_all_regexp']]
 
-# Parse comps, and build up a set of all packages so we
-# can find packages not listed in comps *at all*, beyond
-# just the workstation environment.
+# Parse comps, and build up a set of all packages so we can find packages not
+# listed in comps *at all*, beyond just the workstation environment.
 comps = libcomps.Comps()
 comps.fromxml_f(args.src)
 
-# Parse the workstation-product environment, gathering
-# default or mandatory packages.
-ws_env_name = 'workstation-product-environment'
-ws_ostree_name = 'workstation-ostree-support'
-ws_environ = comps.environments[ws_env_name]
-ws_pkgs = {}
-for gid in ws_environ.group_ids:
+# Parse the workstation-product environment to get the list of comps groups to
+# get packages from.
+groups = []
+for gid in comps.environments['workstation-product-environment'].group_ids:
     if gid.name in comps_exclude_list_groups:
         continue
-    exclude_list = comps_exclude_list.get(gid.name, set())
-    ws_pkgs = load_packages_from_comps_group(ws_pkgs, comps, gid.name, exclude_list, comps_exclude_list_all)
+    groups.append(gid.name)
 
-exclude_list = comps_exclude_list.get(ws_ostree_name, set())
-ws_pkgs = load_packages_from_comps_group(ws_pkgs, comps, ws_ostree_name, exclude_list, comps_exclude_list_all)
+# Always include the packages from the workstation-ostree-support group
+groups.append('workstation-ostree-support')
 
-(comps_unknown, pkgs_added) = compare_comps_manifest_package_lists(ws_pkgs, manifest_packages)
+# Get the packages from those groups, filtering the ones we don't need
+comps_group_pkgs = {}
+for group in groups:
+    exclude_list = comps_exclude_list.get(group, set())
+    comps_group_pkgs = load_packages_from_comps_group(comps_group_pkgs, comps, group, exclude_list, comps_exclude_list_all)
+
+(comps_unknown, pkgs_added) = compare_comps_manifest_package_lists(comps_group_pkgs, manifest_packages)
 
 n_manifest_new = len(comps_unknown)
 n_comps_new = len(pkgs_added)
