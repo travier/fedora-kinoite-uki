@@ -86,13 +86,41 @@ def load_packages_from_comps_group(comps_group_packages, comps, groupname, exclu
             pkgdata[2].add(arch)
     return comps_group_packages
 
+def compare_comps_manifest_package_lists(comps_group_pkgs, manifest_packages):
+    '''Compare the list of packages in the comps and the manifests and return the difference.'''
+    # Look for packages in the manifest but not in the comps
+    comps_unknown = set()
+    for arch in manifest_packages:
+        for pkg in manifest_packages[arch]:
+            if arch == "all":
+                if pkg in comps_group_pkgs and set(comps_group_pkgs[pkg][2]) == set(ARCHES):
+                    continue
+            else:
+                if pkg in comps_group_pkgs and arch in comps_group_pkgs[pkg][2]:
+                    continue
+            comps_unknown.add((pkg, arch))
+
+    # Look for packages in comps but not in the manifest
+    pkgs_added = {}
+    for (pkg, pkgdata) in comps_group_pkgs.items():
+        if set(ARCHES) == set(pkgdata[2]):
+            if pkg not in manifest_packages['all']:
+                pkgs_added[pkg] = pkgdata
+        else:
+            for arch in pkgdata[2]:
+                if pkg not in manifest_packages[arch]:
+                    if pkg not in pkgs_added:
+                        pkgs_added[pkg] = (pkgdata[0], pkgdata[1], set([arch]))
+                    else:
+                        pkgs_added[pkg][2].add(arch)
+
+    return comps_unknown, pkgs_added
+
 parser = argparse.ArgumentParser()
 parser.add_argument("--save", help="Write changes", action='store_true')
 parser.add_argument("src", help="Source path")
 
 args = parser.parse_args()
-
-print("Syncing packages common to all desktops:")
 
 manifest_path = 'fedora-common-ostree-pkgs.yaml'
 manifest_packages = load_packages_from_manifest(manifest_path)
@@ -125,51 +153,25 @@ for gid in ws_environ.group_ids:
 exclude_list = comps_exclude_list.get(ws_ostree_name, set())
 ws_pkgs = load_packages_from_comps_group(ws_pkgs, comps, ws_ostree_name, exclude_list, comps_exclude_list_all)
 
-comps_unknown = set()
-for arch in manifest_packages:
-    for pkg in manifest_packages[arch]:
-        if arch == "all":
-            if pkg in ws_pkgs and set(ws_pkgs[pkg][2]) == set(ARCHES):
-                continue
-        else:
-            if pkg in ws_pkgs and arch in ws_pkgs[pkg][2]:
-                continue
-        comps_unknown.add((pkg, arch))
+(comps_unknown, pkgs_added) = compare_comps_manifest_package_lists(ws_pkgs, manifest_packages)
 
-# Look for packages in the manifest but not in comps at all
 n_manifest_new = len(comps_unknown)
-if n_manifest_new == 0:
-    print("  - All manifest packages are already listed in comps.")
-else:
-    print(f'  - {n_manifest_new} packages not in {ws_env_name}:')
+n_comps_new = len(pkgs_added)
+print(f'Syncing common packages:\t+{n_comps_new}, -{n_manifest_new}')
+if n_manifest_new != 0:
     for (pkg, arch) in sorted(comps_unknown, key = lambda x: x[0]):
-        print(f'    {pkg} (arch: {arch})')
         manifest_packages[arch].remove(pkg)
-
-# Look for packages in workstation but not in the manifest
-ws_added = {}
-for (pkg,data) in ws_pkgs.items():
-    if set(ARCHES) == set(data[2]):
-        if pkg not in manifest_packages['all']:
-            ws_added[pkg] = data
+        print(f'  - {pkg} (arches: {arch})')
+if n_comps_new != 0:
+    for pkg in sorted(pkgs_added):
+        (req, groups, arches) = pkgs_added[pkg]
+        if set(ARCHES) == arches:
             manifest_packages['all'].add(pkg)
-    else:
-        for arch in data[2]:
-            if pkg not in manifest_packages[arch]:
+            print('  + {} ({}, groups: {}, arches: all)'.format(pkg, format_pkgtype(req), ', '.join(groups)))
+        else:
+            for arch in arches:
                 manifest_packages[arch].add(pkg)
-                if pkg not in ws_added:
-                    ws_added[pkg] = (data[0], data[1], set([arch]))
-                else:
-                    ws_added[pkg][2].add(arch)
-
-n_comps_new = len(ws_added)
-if n_comps_new == 0:
-    print("  - All comps packages are already listed in manifest.")
-else:
-    print(f'  - {n_comps_new} packages not in manifest:')
-    for pkg in sorted(ws_added):
-        (req, groups, arches) = ws_added[pkg]
-        print('    {} ({}, groups: {}, arches: {})'.format(pkg, format_pkgtype(req), ', '.join(groups), ', '.join(arches)))
+            print('  + {} ({}, groups: {}, arches: {})'.format(pkg, format_pkgtype(req), ', '.join(groups), ', '.join(arches)))
 
 if (n_manifest_new > 0 or n_comps_new > 0) and args.save:
     write_manifest(manifest_path, manifest_packages)
