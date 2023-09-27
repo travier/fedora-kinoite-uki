@@ -1,15 +1,15 @@
-# This file has a list of packages to skip from comps that we don't want, plus
-# a few include listed things.
+# This file has a list of packages to skip from comps that we don't want
 
-# Entirely skip all packages in libreoffice
+# Entirely skip all packages in those groups for the common set of packages
 exclude_list_groups:
   - libreoffice
   - gnome-desktop
   - container-management
   - base-x
 
-# PackageKit is spread across various groups
-# We can not include openh264. See https://fedoraproject.org/wiki/OpenH264
+# Always exclude packages matching those regexp:
+# - PackageKit is spread across various groups
+# - We can not include openh264. See https://fedoraproject.org/wiki/OpenH264
 exclude_list_all_regexp:
   - "PackageKit.*"
   - "gstreamer1-plugin-openh264"
