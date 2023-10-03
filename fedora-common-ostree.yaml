@@ -15,6 +15,7 @@ include: fedora-common-ostree-pkgs.yaml
 # arch-include:
 #   x86_64: bootupd.yaml
 #   aarch64: bootupd.yaml
+#   ppc64le: bootupd.yaml
 
 packages:
   # Ensure that we have a kernel. Kernel packages are not in any comps group
