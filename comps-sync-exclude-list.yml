@@ -109,6 +109,7 @@ desktop_exclude_list:
     # Non-critical apps -> Flatpak
     - baobab
     - cheese
+    - snapshot
     - evince
     - evince-djvu
     - evince-nautilus
