@@ -7,8 +7,6 @@ rojig:
 
 packages:
   - fedora-release-kinoite
-  # Portals for Flatpak
-  - xdg-desktop-portal-kde
   # Install some minor optional tools for KInfoCenter
   - vulkan-tools
   - xdpyinfo
