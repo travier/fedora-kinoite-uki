@@ -190,7 +190,7 @@ def main():
     desktops_comps_groups = {
         "gnome": ["gnome-desktop", "base-x"],
         "kde": ["kde-desktop"],
-        "xfce": ["xfce-desktop", "xfce-apps", "base-x"],
+        "xfce": ["xfce-desktop", "xfce-apps", "xfce-extra-plugins", "base-x"],
         "lxqt": ["lxqt-desktop", "base-x"],
         "deepin": ["deepin-desktop", "base-x"],
         "mate": ["mate-desktop", "base-x"],
