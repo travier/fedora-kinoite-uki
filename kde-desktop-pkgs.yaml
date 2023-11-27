@@ -32,12 +32,11 @@ packages:
   - kf5-baloo-file
   - kfind
   - khelpcenter
-  - khotkeys
   - kinfocenter
   - kio-admin
   - kmenuedit
   - kmousetool
-  - konsole5
+  - konsole
   - krfb
   - kscreen
   - kscreenlocker
