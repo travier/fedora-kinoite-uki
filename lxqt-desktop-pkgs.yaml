@@ -34,7 +34,6 @@ packages:
   - qterminal
   - sddm
   - sddm-themes
-  - sddm-x11
   - upower
   - xdg-user-dirs
   - xorg-x11-drv-amdgpu

@@ -221,6 +221,8 @@ desktop_exclude_list:
   lxqt-desktop:
     # Incompatible with ostree for various reasons
     - dnfdragora-updater
+    # X11 is going away with Plasma 6
+    - sddm-x11
   deepin-desktop:
     # Incompatible with ostree for various reasons
     - dnfdragora-updater
