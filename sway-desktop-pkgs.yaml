@@ -19,6 +19,8 @@ packages:
   - imv
   - kanshi
   - lxqt-policykit
+  - mesa-dri-drivers
+  - mesa-vulkan-drivers
   - network-manager-applet
   - pavucontrol
   - pinentry-gnome3

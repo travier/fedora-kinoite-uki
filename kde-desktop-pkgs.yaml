@@ -44,6 +44,8 @@ packages:
   - kwin
   - kwrite
   - libappindicator-gtk3
+  - mesa-dri-drivers
+  - mesa-vulkan-drivers
   - orca
   - pam-kwallet
   - phonon-qt5-backend-gstreamer
@@ -68,6 +70,7 @@ packages:
   - plasma-workspace-geolocation
   - plasma-workspace-wallpapers
   - plasma-workspace-wayland
+  - plymouth-system-theme
   - polkit-kde
   - qt-at-spi
   - qt5-qtbase-gui
