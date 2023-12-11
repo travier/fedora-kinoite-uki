@@ -154,7 +154,6 @@ packages:
   - sos
   - spice-vdagent
   - spice-webdavd
-  - sssd
   - sssd-common
   - sssd-kcm
   - sudo
