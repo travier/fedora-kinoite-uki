@@ -31,7 +31,6 @@ packages:
   - kf5-audiocd-kio
   - kf5-baloo-file
   - kfind
-  - khelpcenter
   - kinfocenter
   - kio-admin
   - kmenuedit
@@ -58,7 +57,6 @@ packages:
   - plasma-disks
   - plasma-drkonqi
   - plasma-nm
-  - plasma-nm-openconnect
   - plasma-nm-openvpn
   - plasma-nm-vpnc
   - plasma-pa
@@ -84,6 +82,10 @@ packages:
   - udisks2
   - xwaylandvideobridge
 packages-x86_64:
+  - khelpcenter
   - kio-gdrive
+  - plasma-nm-openconnect
 packages-aarch64:
+  - khelpcenter
   - kio-gdrive
+  - plasma-nm-openconnect
