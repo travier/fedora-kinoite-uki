@@ -3,6 +3,8 @@ include: fedora-common-ostree.yaml
 packages:
   - NetworkManager-config-connectivity-fedora
   - adwaita-gtk2-theme
+  - akonadi-server
+  - akonadi-server-mysql
   - ark
   - bluedevil
   - breeze-icon-theme
@@ -20,14 +22,11 @@ packages:
   - kde-gtk-config
   - kde-inotify-survey
   - kde-partitionmanager
-  - kde-print-manager
   - kde-settings-pulseaudio
   - kdegraphics-thumbnailers
   - kdeplasma-addons
   - kdialog
   - kdnssd
-  - kf5-akonadi-server
-  - kf5-akonadi-server-mysql
   - kf5-audiocd-kio
   - kf5-baloo-file
   - kfind
@@ -47,7 +46,7 @@ packages:
   - mesa-vulkan-drivers
   - orca
   - pam-kwallet
-  - phonon-qt5-backend-gstreamer
+  - phonon-qt6-backend-vlc
   - pinentry-qt
   - plasma-breeze
   - plasma-desktop
@@ -60,6 +59,7 @@ packages:
   - plasma-nm-openvpn
   - plasma-nm-vpnc
   - plasma-pa
+  - plasma-print-manager
   - plasma-systemmonitor
   - plasma-thunderbolt
   - plasma-vault
@@ -80,6 +80,7 @@ packages:
   - spectacle
   - systemd-oomd-defaults
   - udisks2
+  - vlc-plugin-gstreamer
   - xwaylandvideobridge
 packages-x86_64:
   - khelpcenter
