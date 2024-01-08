@@ -184,6 +184,7 @@ packages-x86_64:
   - alsa-sof-firmware
   - amd-ucode-firmware
   - hyperv-daemons
+  - libva-intel-media-driver
   - mcelog
   - microcode_ctl
   - open-vm-tools-desktop
