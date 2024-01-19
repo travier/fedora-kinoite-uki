@@ -114,6 +114,7 @@ packages:
   - ntfs-3g
   - ntfsprogs
   - nvidia-gpu-firmware
+  - nxpwireless-firmware
   - opensc
   - openssh-clients
   - openssh-server
@@ -164,6 +165,7 @@ packages:
   - systemd-udev
   - tar
   - time
+  - tiwilink-firmware
   - toolbox
   - tree
   - unzip
@@ -183,7 +185,9 @@ packages:
 packages-x86_64:
   - alsa-sof-firmware
   - amd-ucode-firmware
+  - cirrus-audio-firmware
   - hyperv-daemons
+  - intel-audio-firmware
   - libva-intel-media-driver
   - mcelog
   - microcode_ctl
