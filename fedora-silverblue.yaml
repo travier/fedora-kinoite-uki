@@ -22,6 +22,13 @@ packages:
   # Include totem-video-thumbnailer for video thumbnailing in Nautilus
   # https://pagure.io/fedora-workstation/issue/168
   - totem-video-thumbnailer
+  # Make sure that GNOME Software's rpm-ostree plugin is always installed
+  - gnome-software-rpm-ostree
+
+# Make sure the following are not pulled in when Recommended by other packages
+exclude-packages:
+  # Exclude GNOME Software's langpack plugin to avoid layering langpacks on Silverblue
+  - gnome-software-fedora-langpacks
 
 repos:
   - fedora-rawhide
