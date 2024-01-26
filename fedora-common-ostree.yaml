@@ -53,6 +53,9 @@ packages:
   # the archive repo for more reliable package layering
   # https://github.com/coreos/fedora-coreos-tracker/issues/400
   - fedora-repos-archive
+  # Always include at least full English language support by default
+  # https://gitlab.com/fedora/ostree/sig/-/issues/14
+  - langpacks-en
 
 selinux: true
 documentation: true
