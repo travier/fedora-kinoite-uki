@@ -174,7 +174,7 @@ packages:
   - usbutils
   - util-linux
   - vim-minimal
-  - wget
+  - wget2-wget
   - which
   - whois
   - wireplumber
