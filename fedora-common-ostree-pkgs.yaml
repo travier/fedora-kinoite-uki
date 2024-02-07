@@ -121,7 +121,6 @@ packages:
   - ostree-grub2
   - pam_afs_session
   - paps
-  - passwd
   - passwdqc
   - pciutils
   - pinfo
