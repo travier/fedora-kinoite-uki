@@ -9,4 +9,4 @@ postprocess:
     #!/bin/bash
     set -xeuo pipefail
     # Transforms /usr/lib/ostree-boot into a bootupd-compatible update payload
-    /usr/bin/bootupctl backend generate-update-metadata /
+    /usr/bin/bootupctl backend generate-update-metadata
