@@ -2,6 +2,7 @@
      check:
        jobs:
          - validate
+         - compose-base
 
  - job:
      name: validate
@@ -11,3 +12,13 @@
        nodes:
          - name: container
            label: zuul-worker-rawhide
+
+ - job:
+     name: compose-base
+     description: Test composing the base variant
+     timeout: 3600
+     run: ci/compose-base.yaml
+     nodeset:
+       nodes:
+         - name: vm
+           label: cloud-fedora-rawhide-medium
