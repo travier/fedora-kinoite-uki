@@ -1,3 +1,10 @@
+/*.ociarchive
 /.buildid
-/fedora-comps
-/fedora-lorax-templates
+/cache/
+/debugdata/
+/fedora-comps/
+/fedora-lorax-templates/
+/iso/
+/logs/
+/repo/
+/tmp/
