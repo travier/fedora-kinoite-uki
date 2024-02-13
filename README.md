@@ -95,7 +95,8 @@ sed -i "s/40/41/g" README.md
 ```
 rm fedora-rawhide.repo
 sed -i "/- fedora-rawhide/d" *.yaml
-sed -i "/# - fedora-40/- fedora-40/" *.yaml
+sed -i "s/# - fedora-40/- fedora-40/" *.yaml
+sed -i "s/ref: fedora\/rawhide/ref: fedora\/40/" *.yaml
 ```
 
 ## Historical references
