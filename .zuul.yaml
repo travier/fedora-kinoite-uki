@@ -11,6 +11,8 @@
      nodeset:
        nodes:
          - name: container
+           # Replace by a fixed version label after branching, once available:
+           # https://fedora.softwarefactory-project.io/zuul/labels
            label: zuul-worker-rawhide
 
  - job:
@@ -21,4 +23,6 @@
      nodeset:
        nodes:
          - name: vm
+           # Replace by a fixed version label after branching, once available:
+           # https://fedora.softwarefactory-project.io/zuul/labels
            label: cloud-fedora-rawhide-medium
