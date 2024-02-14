@@ -14,8 +14,3 @@ packages:
   # Portals for Flatpak
   - xdg-desktop-portal
   - xdg-desktop-portal-gtk
-
-repos:
-  - fedora-rawhide
-  # - fedora-41
-  # - fedora-41-updates

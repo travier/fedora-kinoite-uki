@@ -45,8 +45,3 @@ postprocess:
 
     # Enable auto updates in Discover
     echo -e "[Global]\nUseUnattendedUpdates=true\n" > /etc/xdg/PlasmaDiscoverUpdates
-
-repos:
-  - fedora-rawhide
-  # - fedora-41
-  # - fedora-41-updates

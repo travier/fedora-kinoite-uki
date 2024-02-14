@@ -18,8 +18,3 @@ exclude-packages:
   # nothing in the tree would use these
   - tracker
   - tracker-miners
-
-repos:
-  - fedora-rawhide
-  # - fedora-41
-  # - fedora-41-updates

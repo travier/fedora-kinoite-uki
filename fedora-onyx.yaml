@@ -12,8 +12,3 @@ exclude-packages:
   # Not needed in Budgie Desktop
   - tracker
   - tracker-miners
-
-repos:
-  - fedora-rawhide
-  # - fedora-41
-  # - fedora-41-updates

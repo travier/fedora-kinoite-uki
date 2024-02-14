@@ -15,8 +15,3 @@ packages:
   - plasma-systemsettings
   # Portals for Flatpak
   - xdg-desktop-portal-kde
-
-repos:
-  - fedora-rawhide
-  # - fedora-41
-  # - fedora-41-updates

@@ -13,8 +13,3 @@ packages:
 
 exclude-packages:
   - python3-unbound
-
-repos:
-  - fedora-rawhide
-  # - fedora-41
-  # - fedora-41-updates

@@ -83,7 +83,7 @@ Make a PR similar to
 ### On Rawhide / main branch
 
 ```
-sed -i "s/41/42/g" *.repo *.yaml comps-sync.py
+sed -i "s/41/42/g" *.repo fedora-common-ostree.yaml comps-sync.py
 mv fedora-41.repo fedora-42.repo
 mv fedora-41-updates.repo fedora-42-updates.repo
 sed -i "s/42/42/g" README.md

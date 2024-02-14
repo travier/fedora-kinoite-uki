@@ -11,8 +11,3 @@ packages:
   - fedora-release-ostree-desktop
   # Portals for Flatpak
   - xdg-desktop-portal-gtk
-
-repos:
-  - fedora-rawhide
-  # - fedora-41
-  # - fedora-41-updates
