@@ -83,20 +83,20 @@ Make a PR similar to
 ### On Rawhide / main branch
 
 ```
-sed -i "s/40/41/g" *.repo *.yaml comps-sync.py
-mv fedora-40.repo fedora-41.repo
-mv fedora-40-updates.repo fedora-41-updates.repo
+sed -i "s/41/42/g" *.repo *.yaml comps-sync.py
+mv fedora-41.repo fedora-42.repo
+mv fedora-41-updates.repo fedora-42-updates.repo
+sed -i "s/42/42/g" README.md
 sed -i "s/41/42/g" README.md
-sed -i "s/40/41/g" README.md
 ```
 
-### On the new branch (f40)
+### On the new branch (f41)
 
 ```
 rm fedora-rawhide.repo
 sed -i "/- fedora-rawhide/d" *.yaml
-sed -i "s/# - fedora-40/- fedora-40/" *.yaml
-sed -i "s/ref: fedora\/rawhide/ref: fedora\/40/" *.yaml
+sed -i "s/# - fedora-41/- fedora-41/" *.yaml
+sed -i "s/ref: fedora\/rawhide/ref: fedora\/41/" *.yaml
 ```
 
 ## Historical references

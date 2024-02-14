@@ -32,5 +32,5 @@ exclude-packages:
 
 repos:
   - fedora-rawhide
-  # - fedora-40
-  # - fedora-40-updates
+  # - fedora-41
+  # - fedora-41-updates
