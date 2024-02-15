@@ -1,7 +1,7 @@
 ref: fedora/rawhide/${basearch}/ostree-base
 
 releasever: 41
-automatic_version_prefix: "${releasever}.<date:%Y%m%d>"
+automatic-version-prefix: "${releasever}.<date:%Y%m%d>"
 mutate-os-release: "${releasever}"
 
 # Default to `bash` in our container, the same as other containers we ship.
