@@ -1,5 +1,4 @@
-include:
-  - sway-desktop-pkgs.yaml
+include: sway-desktop-pkgs.yaml
 ref: fedora/rawhide/${basearch}/sericea
 rojig:
   name: fedora-sericea
