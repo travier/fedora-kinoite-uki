@@ -13,7 +13,9 @@
          - name: container
            # Replace by a fixed version label after branching, once available:
            # https://fedora.softwarefactory-project.io/zuul/labels
-           label: zuul-worker-rawhide
+           # The Rawhide container is temporarily broken
+           # label: zuul-worker-rawhide
+           label: cloud-fedora-rawhide-small
 
  - job:
      name: compose-base
