@@ -14,3 +14,9 @@ packages:
   # Portals for Flatpak
   - xdg-desktop-portal
   - xdg-desktop-portal-gtk
+
+# Kept in the leaf manifest as they are overwritten by Pungi in composes
+repos:
+  - fedora-rawhide
+  # - fedora-41
+  # - fedora-41-updates

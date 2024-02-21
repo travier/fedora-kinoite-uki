@@ -138,8 +138,3 @@ postprocess:
     ln -snf /usr/libexec/samba/cups_backend_smb /usr/lib/cups/backend/smb
 
 postprocess-script: "postprocess.sh"
-
-repos:
-  - fedora-rawhide
-  # - fedora-41
-  # - fedora-41-updates

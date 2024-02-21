@@ -45,3 +45,9 @@ postprocess:
 
     # Enable auto updates in Discover
     echo -e "[Global]\nUseUnattendedUpdates=true\n" > /etc/xdg/PlasmaDiscoverUpdates
+
+# Kept in the leaf manifest as they are overwritten by Pungi in composes
+repos:
+  - fedora-rawhide
+  # - fedora-41
+  # - fedora-41-updates
