@@ -2,7 +2,7 @@ include: gnome-desktop-pkgs.yaml
 ref: fedora/rawhide/${basearch}/silverblue
 rojig:
   name: fedora-silverblue
-  summary: "Fedora Silverblue base image"
+  summary: "Fedora Silverblue"
   license: MIT
 
 packages:

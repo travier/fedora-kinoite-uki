@@ -2,7 +2,7 @@ include: sway-desktop-pkgs.yaml
 ref: fedora/rawhide/${basearch}/sericea
 rojig:
   name: fedora-sericea
-  summary: "Fedora Sericea (Sway) base image"
+  summary: "Fedora Sway Atomic"
   license: MIT
 
 packages:

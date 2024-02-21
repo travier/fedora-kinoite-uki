@@ -2,7 +2,7 @@ include: cinnamon-desktop-pkgs.yaml
 ref: fedora/rawhide/${basearch}/cinnamon
 rojig:
   name: fedora-cinnamon
-  summary: "Fedora Cinnamon base image"
+  summary: "Fedora Cinnamon Atomic"
   license: MIT
 
 packages:

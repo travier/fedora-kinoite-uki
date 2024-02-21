@@ -2,7 +2,7 @@ include: budgie-desktop-pkgs.yaml
 ref: fedora/rawhide/${basearch}/onyx
 rojig:
   name: fedora-onyx
-  summary: "Fedora Onyx (Budgie) base image"
+  summary: "Fedora Budgie Atomic"
   license: MIT
 
 packages:

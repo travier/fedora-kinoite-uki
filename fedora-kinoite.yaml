@@ -2,7 +2,7 @@ include: kde-desktop-pkgs.yaml
 ref: fedora/rawhide/${basearch}/kinoite
 rojig:
   name: fedora-kde
-  summary: "Fedora Kinoite (KDE) base image"
+  summary: "Fedora Kinoite"
   license: MIT
 
 packages:

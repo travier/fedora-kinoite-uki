@@ -2,7 +2,7 @@ include: xfce-desktop-pkgs.yaml
 ref: fedora/rawhide/${basearch}/vauxite
 rojig:
   name: fedora-vauxite
-  summary: "Fedora Vauxite (XFCE) base image"
+  summary: "Fedora XFCE Atomic"
   license: MIT
 
 packages:

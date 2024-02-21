@@ -2,7 +2,7 @@ include: lxqt-desktop-pkgs.yaml
 ref: fedora/rawhide/${basearch}/lazurite
 rojig:
   name: fedora-lxqt
-  summary: "Fedora Lazurite (LXQt) base image"
+  summary: "Fedora LXQt Atomic"
   license: MIT
 
 packages:

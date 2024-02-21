@@ -2,7 +2,7 @@ include: mate-desktop-pkgs.yaml
 ref: fedora/rawhide/${basearch}/mate
 rojig:
   name: fedora-mate
-  summary: "Fedora Mate base image"
+  summary: "Fedora Mate Atomic"
   license: MIT
 
 packages:

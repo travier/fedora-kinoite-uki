@@ -2,7 +2,7 @@ include: deepin-desktop-pkgs.yaml
 ref: fedora/rawhide/${basearch}/deepin
 rojig:
   name: fedora-deepin
-  summary: "Fedora Deepin base image"
+  summary: "Fedora Deepin Atomic"
   license: MIT
 
 packages:

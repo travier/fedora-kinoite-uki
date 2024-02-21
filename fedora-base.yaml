@@ -2,7 +2,7 @@ include: fedora-common-ostree.yaml
 ref: fedora/rawhide/${basearch}/base
 rojig:
   name: fedora-base
-  summary: "Fedora base image for alternative DE"
+  summary: "Fedora Base Atomic"
   license: MIT
 
 packages:
