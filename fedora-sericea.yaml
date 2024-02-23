@@ -6,7 +6,7 @@ rojig:
   license: MIT
 
 packages:
-  - fedora-release-sericea
+  - fedora-release-sway-atomic
   # explicitly list some defaults
   - firefox
 
