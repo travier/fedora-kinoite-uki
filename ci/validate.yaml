@@ -2,10 +2,10 @@
    tasks:
      - name: Install dependencies
        package:
-         name: ['python3-pyyaml']
+         name: ['just', 'python3-pyyaml']
          state: present
        become: yes
      - name: Validate manifests and scripts syntax
        ansible.builtin.command:
          chdir: "{{ zuul.project.src_dir }}"
-         cmd: ci/validate
+         cmd: just validate
