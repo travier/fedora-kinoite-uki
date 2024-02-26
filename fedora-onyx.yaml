@@ -6,7 +6,7 @@ rojig:
   license: MIT
 
 packages:
-  - fedora-release-onyx
+  - fedora-release-budgie-atomic
 
 exclude-packages:
   # Not needed in Budgie Desktop
