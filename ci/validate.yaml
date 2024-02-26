@@ -2,10 +2,18 @@
    tasks:
      - name: Install dependencies
        package:
-         name: ['just', 'python3-pyyaml']
+         name:
+           - 'just'
+           - 'ostree'
+           - 'python3-pyyaml'
+           - 'rpm-ostree'
          state: present
        become: yes
      - name: Validate manifests and scripts syntax
        ansible.builtin.command:
          chdir: "{{ zuul.project.src_dir }}"
          cmd: just validate
+     - name: Perform dependency resolution for all variants
+       ansible.builtin.command:
+         chdir: "{{ zuul.project.src_dir }}"
+         cmd: just compose-dry-run
