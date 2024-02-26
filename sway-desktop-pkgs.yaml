@@ -15,6 +15,7 @@ packages:
   - foot
   - fprintd-pam
   - gnome-keyring-pam
+  - gnome-themes-extra
   - grim
   - imv
   - kanshi
@@ -41,6 +42,8 @@ packages:
   - waybar
   - wev
   - wl-clipboard
+  - wlr-randr
+  - wlsunset
   - xdg-desktop-portal-gtk
   - xdg-desktop-portal-wlr
   - xorg-x11-server-Xwayland

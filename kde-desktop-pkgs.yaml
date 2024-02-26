@@ -28,7 +28,7 @@ packages:
   - kdeplasma-addons
   - kdialog
   - kdnssd
-  - kf5-baloo-file
+  - kf6-baloo-file
   - kfind
   - kinfocenter
   - kio-admin
@@ -70,8 +70,6 @@ packages:
   - plasma-workspace-wayland
   - plymouth-system-theme
   - polkit-kde
-  - qt5-qtbase-gui
-  - qt5-qtdeclarative
   - sddm
   - sddm-breeze
   - sddm-kcm
