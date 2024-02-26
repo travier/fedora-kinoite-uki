@@ -86,6 +86,22 @@ manifest variant=default_variant:
 
     rpm-ostree compose tree --print-only --repo=repo fedora-{{variant}}.yaml
 
+# Perform dependency resolution for all official variants
+compose-dry-run:
+    #!/bin/bash
+    set -euxo pipefail
+
+    mkdir -p repo cache logs
+    if [[ ! -f "repo/config" ]]; then
+        pushd repo > /dev/null || exit 1
+        ostree init --repo . --mode=bare-user
+        popd > /dev/null || exit 1
+    fi
+
+    for v in "silverblue" "kinoite" "sericea" "onyx"; do
+        rpm-ostree compose tree --unified-core --repo=repo --dry-run "fedora-${v}.yaml"
+    done
+
 # Alias/shortcut for compose-image command
 compose variant=default_variant: (compose-image variant)
 
