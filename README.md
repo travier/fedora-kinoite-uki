@@ -1,56 +1,111 @@
-# Manifests for rpm-ostree based Fedora variants
+# Manifests for Fedora Atomic Desktops variants
 
 This is the configuration needed to create
-[rpm-ostree](https://coreos.github.io/rpm-ostree/) based variants of Fedora.
+[rpm-ostree](https://coreos.github.io/rpm-ostree/) based, desktop variants of
+Fedora, also known as
+[Fedora Atomic Desktops](https://fedoraproject.org/atomic-desktops/).
+
+This repo is managed by the
+[Fedora Atomic Desktops SIG](https://fedoraproject.org/wiki/SIGs/AtomicDesktops).
+
+The currently official Fedora Atomic Desktop variants are:
+
+- Fedora Silverblue
+- Fedora Kinoite
+- Fedora Sway Atomic
+- Fedora Budgie Atomic
+
+Reach out to the SIG if you are interested in creating and maintaining a new
+Atomic variant.
+
+## Repository content
+
 Each variant is described in a YAML
 [treefile](https://coreos.github.io/rpm-ostree/treefile/) which is then used by
 rpm-ostree to compose an ostree commit with the package requested.
 
-In the Fedora infrastructure, this happens via
-[pungi](https://pagure.io/pungi-fedora) with
-[Lorax](https://github.com/weldr/lorax)
-([templates](https://pagure.io/fedora-lorax-templates)).
+In the Fedora infrastructure, composes are made via
+[pungi](https://pagure.io/pungi) with the configuration from:
 
-## Fedora Silverblue
+- for Rawhide and branched composes:
+  [pagure.io/pungi-fedora](https://pagure.io/pungi-fedora)
+- for stable releases:
+  [pagure.io/fedora-infra](https://pagure.io/fedora-infra/ansible/blob/main/f/roles/bodhi2/backend/templates/pungi.rpm.conf.j2)
 
-- Website: https://silverblue.fedoraproject.org/ ([sources](https://github.com/fedora-silverblue/silverblue-site))
-- Documentation: https://docs.fedoraproject.org/en-US/fedora-silverblue/ ([sources](https://github.com/fedora-silverblue/silverblue-docs))
-- Issue tracker: https://github.com/fedora-silverblue/issue-tracker/issues
+Installer ISOs are built using [Lorax](https://github.com/weldr/lorax) and
+additional templates:
+[pagure.io/fedora-lorax-templates](https://pagure.io/fedora-lorax-templates).
 
-## Fedora Kinoite
+## Website
 
-- Website: https://kinoite.fedoraproject.org/ ([sources](https://pagure.io/fedora-kde/kinoite-site))
-- Documentation: https://docs.fedoraproject.org/en-US/fedora-kinoite/ ([sources](https://pagure.io/fedora-kde/kinoite-docs))
-- Issue tracker: https://pagure.io/fedora-kde/SIG/issues
+The sources for the
+[Silverblue](https://fedoraproject.org/atomic-desktops/silverblue/),
+[Kinoite](https://fedoraproject.org/atomic-desktops/kinoite/),
+[Sway Atomic](https://fedoraproject.org/atomic-desktops/sway/) and
+[Budgie Atomic](https://fedoraproject.org/atomic-desktops/budgie/) websites are
+in [gitlab.com/fedora/fedora-websites-3.0](https://gitlab.com/fedora/websites-apps/fedora-websites/fedora-websites-3.0).
+
+## Issue trackers
+
+Issues common to all Fedora Atomic Desktops are tracked in
+[gitlab.com/fedora/ostree/sig](https://gitlab.com/fedora/ostree/sig/-/issues).
+
+Desktop specific issues should be filed in their respective issue trackers:
+
+- [Silverblue](https://github.com/fedora-silverblue/issue-tracker/issues?q=is%3Aissue+is%3Aopen+sort%3Aupdated-desc)
+    - See also the [Workstation issue tracker](https://pagure.io/fedora-workstation/issues?status=Open&order_key=last_updated&order=desc)
+- [Kinoite](https://pagure.io/fedora-kde/SIG/issues?status=Open&order_key=last_updated&order=desc)
+  ([KDE SIG](https://fedoraproject.org/wiki/SIGs/KDE))
+- [Sway Atomic](https://gitlab.com/fedora/sigs/sway/SIG/-/issues)
+  ([Sway SIG](https://fedoraproject.org/wiki/SIGs/Sway))
+- [Budgie Atomic](https://pagure.io/fedora-budgie/project/issues?status=Open&order_key=last_updated&order=desc)
+  ([Budgie SIG](https://fedoraproject.org/wiki/SIGs/Budgie))
+
+## Documentation
+
+The documentation for Fedora Atomic variants is currently duplicated for each
+variant at [Atomic Desktops](https://docs.fedoraproject.org/en-US/emerging/).
+
+There are plans to unify the documentation:
+[ostree/sig#10](https://gitlab.com/fedora/ostree/sig/-/issues/10)
+
+Documentation sources:
+
+- [Silverblue](https://github.com/fedora-silverblue/silverblue-docs)
+- [Kinoite](https://pagure.io/fedora-kde/kinoite-docs)
+- [Sway Atomic](https://gitlab.com/fedora/sigs/sway/sericea-docs)
+- Budgie Atomic (to be determined)
 
 ## Building
 
-Instructions to perform a local build of Silverblue:
+All commonly used commands are listed as recipes in the
+[justfile](https://github.com/casey/just) (see
+[Just](https://github.com/casey/just)).
+
+Example to do a local build of Fedora Silverblue:
 
 ```
 # Clone the config
-git clone https://pagure.io/workstation-ostree-config && cd workstation-ostree-config
+$ git clone https://pagure.io/workstation-ostree-config && cd workstation-ostree-config
 
-# Prepare directories
-mkdir -p repo cache
-ostree --repo=repo init --mode=archive
+# Build the classic ostree commits (currently the default in Fedora)
+$ just compose-legacy variant=silverblue
 
-# Build (compose) the variant of your choice
-sudo rpm-ostree compose tree --repo=repo --cachedir=cache fedora-silverblue.yaml
-
-# Update summary file
-ostree summary --repo=repo --update
+# Or build the new ostree native container (not default yet, still in development)
+$ just compose-image variant=silverblue
 ```
 
 ## Testing
 
-Instructions to test the resulting build:
+Instructions to test the resulting build for classic ostree commits:
 
-- First, serve the ostree repo using an HTTP server. You can use any static file server. For example using <https://github.com/TheWaWaR/simple-http-server>:
+- First, serve the ostree repo using an HTTP server. You can use any static
+  file server. For example using
+  <https://github.com/TheWaWaR/simple-http-server>:
 
-  ```
-  simple-http-server --index --ip 192.168.122.1 --port 8000
-  ```
+```
+simple-http-server --index --ip 192.168.122.1 --port 8000
+```
 
 - Then, on an already installed Silverblue system:
 
@@ -69,6 +124,17 @@ sudo rpm-ostree rebase testremote:fedora/rawhide/x86_64/silverblue
 
 # Reboot and test!
 ```
+
+Instructions to test the resulting build for ostree native containers:
+
+- Push the OCI archive to a container registry
+- Rebase to it:
+
+```
+$ rpm-ostree rebase ostree-unverified-image:registry:<oci image>
+```
+
+See [URL format for ostree native containers](https://coreos.github.io/rpm-ostree/container/#url-format-for-ostree-native-containers) for details.
 
 ## Branching instructions for new Fedora releases
 
