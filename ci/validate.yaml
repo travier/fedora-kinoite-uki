@@ -3,10 +3,12 @@
      - name: Install dependencies
        package:
          name:
+           - 'jq'
            - 'just'
            - 'ostree'
            - 'python3-pyyaml'
            - 'rpm-ostree'
+           - 'selinux-policy-targeted'
          state: present
        become: yes
      - name: Validate manifests and scripts syntax
@@ -17,3 +19,7 @@
        ansible.builtin.command:
          chdir: "{{ zuul.project.src_dir }}"
          cmd: just compose-dry-run
+     - name: Compose the base variant
+       ansible.builtin.command:
+         chdir: "{{ zuul.project.src_dir }}"
+         cmd: just compose-legacy base

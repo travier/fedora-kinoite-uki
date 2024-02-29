@@ -2,26 +2,13 @@
      check:
        jobs:
          - validate
-         - compose-base
 
  - job:
      name: validate
-     description: Validate manifests and scripts syntax
-     run: ci/validate.yaml
-     nodeset:
-       nodes:
-         - name: container
-           # Replace by a fixed version label after branching, once available:
-           # https://fedora.softwarefactory-project.io/zuul/labels
-           # The Rawhide container is temporarily broken
-           # label: zuul-worker-rawhide
-           label: cloud-fedora-rawhide-small
-
- - job:
-     name: compose-base
-     description: Test composing the base variant
+     description: Validate manifests, scripts, dependencies and compose the base image
+     # Increased timeout as builds can take a while
      timeout: 3600
-     run: ci/compose-base.yaml
+     run: ci/validate.yaml
      nodeset:
        nodes:
          - name: vm
