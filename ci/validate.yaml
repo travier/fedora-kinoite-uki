@@ -10,7 +10,7 @@
           - 'rpm-ostree'
           - 'selinux-policy-targeted'
         state: present
-      become: yes
+      become: true
     - name: Validate manifests and scripts syntax
       ansible.builtin.command:
         chdir: "{{ zuul.project.src_dir }}"
