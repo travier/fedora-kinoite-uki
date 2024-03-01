@@ -86,8 +86,8 @@ manifest variant=default_variant:
 
     rpm-ostree compose tree --print-only --repo=repo fedora-{{variant}}.yaml
 
-# Perform dependency resolution for all official variants
-compose-dry-run:
+# Perform dependency resolution for a given variant (defaults to Silverblue)
+compose-dry-run variant=default_variant:
     #!/bin/bash
     set -euxo pipefail
 
@@ -98,9 +98,7 @@ compose-dry-run:
         popd > /dev/null || exit 1
     fi
 
-    for v in "silverblue" "kinoite" "sericea" "onyx"; do
-        rpm-ostree compose tree --unified-core --repo=repo --dry-run "fedora-${v}.yaml"
-    done
+    rpm-ostree compose tree --unified-core --repo=repo --dry-run fedora-{{variant}}.yaml
 
 # Alias/shortcut for compose-image command
 compose variant=default_variant: (compose-image variant)
