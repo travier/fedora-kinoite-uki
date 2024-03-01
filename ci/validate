@@ -22,17 +22,16 @@ def validate_shell(rootfd, name):
 
 for root, dirs, files, rootfd in os.fwalk('.'):
     # Skip .git, repo, cache, tmp, logs, fedora-comps
-    for d in ['.git', 'repo', 'cache', 'tmp', 'logs', 'fedora-comps', 'ci']:
+    for d in ['.git', 'repo', 'cache', 'tmp', 'logs', 'fedora-comps']:
         if d in dirs:
             dirs.remove(d)
     for name in files:
-        if name == ".zuul.yaml":
-            continue
         if name.endswith(('.yaml', '.yml')):
             print("Validating:", name)
             with open(os.open(name, dir_fd=rootfd, flags=os.O_RDONLY)) as f:
                 yaml.safe_load(f)
-            result = subprocess.run(['grep', '-RniEv', '^(  )*[a-z#/-]|^$|^#', name], encoding='UTF-8')
+            result = subprocess.run(['grep', '-RniEv', '^(  )*[a-z#/-]|^$|^#', name], encoding='UTF-8',
+                                    preexec_fn=lambda: os.fchdir(rootfd))
             if result.returncode == 0:
                 raise Exception("Found likely invalid indentation in YAML file: {}".format(name))
             validated +=1
@@ -47,7 +46,7 @@ for root, dirs, files, rootfd in os.fwalk('.'):
         if not stbuf.st_mode & stat.S_IXUSR:
             continue
         mimetype = subprocess.check_output(['file', '-b', '--mime-type', name], encoding='UTF-8',
-                                        preexec_fn=lambda: os.fchdir(rootfd)).strip()
+                                           preexec_fn=lambda: os.fchdir(rootfd)).strip()
         if mimetype == 'text/x-shellscript':
             print("Validating:", name)
             validate_shell(rootfd, name)
