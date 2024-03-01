@@ -11,15 +11,46 @@
           - 'selinux-policy-targeted'
         state: present
       become: true
+
     - name: Validate manifests and scripts syntax
       ansible.builtin.command:
         chdir: "{{ zuul.project.src_dir }}"
         cmd: just validate
-    - name: Perform dependency resolution for all variants
-      ansible.builtin.command:
+
+    - name: Perform dependency resolution for Silverblue
+      ansible.builtin.shell:
         chdir: "{{ zuul.project.src_dir }}"
-        cmd: just compose-dry-run
+        cmd: "just compose-dry-run silverblue && touch .zuulci.silverblue"
+      # Still run the next step if this one fails
+      ignore_errors: true
+
+    - name: Perform dependency resolution for Kinoite
+      ansible.builtin.shell:
+        chdir: "{{ zuul.project.src_dir }}"
+        cmd: "just compose-dry-run kinoite && touch .zuulci.kinoite"
+      # Still run the next step if this one fails
+      ignore_errors: true
+
+    - name: Perform dependency resolution for Sway Atomic
+      ansible.builtin.shell:
+        chdir: "{{ zuul.project.src_dir }}"
+        cmd: "just compose-dry-run sericea && touch .zuulci.sericea"
+      # Still run the next step if this one fails
+      ignore_errors: true
+
+    - name: Perform dependency resolution for Budgie Atomic
+      ansible.builtin.shell:
+        chdir: "{{ zuul.project.src_dir }}"
+        cmd: "just compose-dry-run onyx && touch .zuulci.onyx"
+      # Still run the next step if this one fails
+      ignore_errors: true
+
     - name: Compose the base variant
       ansible.builtin.command:
         chdir: "{{ zuul.project.src_dir }}"
         cmd: just compose-legacy base
+
+    - name: Check if any previous dependency resolution steps failed
+      ansible.builtin.shell:
+        chdir: "{{ zuul.project.src_dir }}"
+        cmd: "[[ -f .zuulci.silverblue ]] && [[ -f .zuulci.kinoite ]] && [[ -f .zuulci.sericea ]] && [[ -f .zuulci.onyx ]]"
