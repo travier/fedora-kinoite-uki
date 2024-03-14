@@ -23,6 +23,7 @@ packages:
   - gnome-bluetooth
   - gnome-browser-connector
   - gnome-classic-session
+  - gnome-classic-session-xsession
   - gnome-color-manager
   - gnome-control-center
   - gnome-disk-utility
