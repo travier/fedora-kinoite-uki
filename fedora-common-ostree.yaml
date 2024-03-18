@@ -8,7 +8,8 @@ container-cmd:
 
 include:
   - fedora-common-ostree-pkgs.yaml
-  - bootupd.yaml
+  # See: https://gitlab.com/fedora/ostree/sig/-/issues/1
+  # - bootupd.yaml
 
 packages:
   # Ensure that we have a kernel. Kernel packages are not in any comps group
