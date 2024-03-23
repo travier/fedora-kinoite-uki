@@ -85,7 +85,6 @@ packages:
   - mozo
   - network-manager-applet
   - nm-connection-editor
-  - orca
   - parole
   - pavucontrol
   - pipewire-alsa

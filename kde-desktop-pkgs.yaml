@@ -18,6 +18,7 @@ packages:
   - fprintd-pam
   - glibc-all-langpacks
   - gnome-keyring-pam
+  - kaccounts-integration-qt6
   - kcharselect
   - kde-connect
   - kde-gtk-config
@@ -44,7 +45,6 @@ packages:
   - libappindicator-gtk3
   - mesa-dri-drivers
   - mesa-vulkan-drivers
-  - orca
   - pam-kwallet
   - phonon-qt6-backend-vlc
   - pinentry-qt
@@ -74,16 +74,19 @@ packages:
   - sddm-breeze
   - sddm-kcm
   - sddm-wayland-plasma
+  - signon-kwallet-extension
   - spectacle
   - systemd-oomd-defaults
   - udisks2
   - vlc-plugin-gstreamer
   - xwaylandvideobridge
 packages-x86_64:
+  - kaccounts-providers
   - khelpcenter
   - kio-gdrive
   - plasma-nm-openconnect
 packages-aarch64:
+  - kaccounts-providers
   - khelpcenter
   - kio-gdrive
   - plasma-nm-openconnect

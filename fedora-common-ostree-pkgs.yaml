@@ -9,6 +9,8 @@ packages:
   - alsa-ucm
   - alsa-utils
   - amd-gpu-firmware
+  - at-spi2-atk
+  - at-spi2-core
   - atheros-firmware
   - attr
   - audit
@@ -22,6 +24,7 @@ packages:
   - bind-utils
   - bluez-cups
   - brcmfmac-firmware
+  - brltty
   - btrfs-progs
   - bzip2
   - chrony
@@ -118,6 +121,7 @@ packages:
   - opensc
   - openssh-clients
   - openssh-server
+  - orca
   - ostree-grub2
   - pam_afs_session
   - paps

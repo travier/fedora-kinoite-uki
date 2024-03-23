@@ -10,8 +10,6 @@ packages:
   - NetworkManager-ssh-gnome
   - NetworkManager-vpnc-gnome
   - NetworkManager-wwan
-  - at-spi2-atk
-  - at-spi2-core
   - budgie-backgrounds
   - budgie-control-center
   - budgie-desktop

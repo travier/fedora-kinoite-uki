@@ -11,8 +11,6 @@ packages:
   - NetworkManager-vpnc-gnome
   - NetworkManager-wwan
   - adobe-source-code-pro-fonts
-  - at-spi2-atk
-  - at-spi2-core
   - avahi
   - dconf
   - fprintd-pam
@@ -53,7 +51,6 @@ packages:
   - mesa-libEGL
   - mesa-vulkan-drivers
   - nautilus
-  - orca
   - plymouth-system-theme
   - polkit
   - rygel
