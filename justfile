@@ -391,19 +391,29 @@ upload-container variant=default_variant:
         git_commit="$(git rev-parse --short HEAD)"
     fi
 
+    # Login to the registry
     skopeo login --username "${CI_REGISTRY_USER}" --password "${CI_REGISTRY_PASSWORD}" quay.io
 
     # Copy to the new names
     image="quay.io/fedora-ostree-desktops/${variant}"
 
+    SKOPEO_ARGS="--retry-times 3"
+
     # Copy fully versioned tag (major version, build date/id, git commit)
-    skopeo copy --retry-times 3 "oci-archive:${variant}.ociarchive" "docker://${image}:${version}.${buildid}.${git_commit}"
+    skopeo copy ${SKOPEO_ARGS} \
+        "oci-archive:${variant}.ociarchive" \
+        "docker://${image}:${version}.${buildid}.${git_commit}"
 
     # Update "un-versioned" tag (only major version)
-    skopeo copy --retry-times 3 "docker://${image}:${version}.${buildid}.${git_commit}" "docker://${image}:${version}"
+    skopeo copy ${SKOPEO_ARGS} \
+        "docker://${image}:${version}.${buildid}.${git_commit}" \
+        "docker://${image}:${version}"
+
     if [[ "${variant}" == "kinoite-nightly" ]]; then
         # Update latest tag for kinoite-nightly only
-        skopeo copy --retry-times 3 "docker://${image}:${version}.${buildid}.${git_commit}" "docker://${image}:latest"
+        skopeo copy ${SKOPEO_ARGS} \
+            "docker://${image}:${version}.${buildid}.${git_commit}" \
+            "docker://${image}:latest"
     fi
 
     # Copy to legacy names if needed
@@ -413,8 +423,12 @@ upload-container variant=default_variant:
         image="quay.io/fedora-ostree-desktops/${variant_legacy}"
 
         # Copy fully versioned tag (major version, build date/id, git commit)
-        skopeo copy --retry-times 3 "oci-archive:${variant}.ociarchive" "docker://${image}:${version}.${buildid}.${git_commit}"
+        skopeo copy ${SKOPEO_ARGS} \
+            "oci-archive:${variant}.ociarchive" \
+            "docker://${image}:${version}.${buildid}.${git_commit}"
 
         # Update "un-versioned" tag (only major version)
-        skopeo copy --retry-times 3 "docker://${image}:${version}.${buildid}.${git_commit}" "docker://${image}:${version}"
+        skopeo copy ${SKOPEO_ARGS} \
+            "docker://${image}:${version}.${buildid}.${git_commit}" \
+            "docker://${image}:${version}"
     fi
