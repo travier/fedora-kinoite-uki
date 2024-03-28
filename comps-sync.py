@@ -1,10 +1,14 @@
 #!/usr/bin/python3
 
 '''
-Usage: ./comps-sync.py /path/to/comps-f41.xml.in
+Usage: ./comps-sync.py [--save] /path/to/comps-f41.xml.in
 
-Can both remove packages from the manifest which are not mentioned in comps,
-and add packages from comps.
+Filter and sync packages from comps groups into rpm-ostree manifests. The sync
+will remove packages from the manifests which are not mentioned in comps and
+add missing packages from comps to the manifests.
+
+Use --save to write the changes and always exit with a 0 return code.
+Otherwise, exit with a non zero return code if any changes are needed.
 '''
 
 import argparse
@@ -148,15 +152,18 @@ def update_manifests_from_groups(comps, groups, path, desktop, save, comps_exclu
                     manifest_packages[arch].add(pkg)
                 print('  + {} ({}, groups: {}, arches: {})'.format(pkg, format_pkgtype(req), ', '.join(groups), ', '.join(arches)))
 
-    if (n_manifest_new > 0 or n_comps_new > 0) and save:
-        if desktop == "common":
-            write_manifest(path, manifest_packages)
-        else:
-            write_manifest(path, manifest_packages, include="fedora-common-ostree.yaml")
+    if (n_manifest_new > 0 or n_comps_new > 0):
+        if save:
+            if desktop == "common":
+                write_manifest(path, manifest_packages)
+            else:
+                write_manifest(path, manifest_packages, include="fedora-common-ostree.yaml")
+        return 1
+    return 0
 
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument("--save", help="Write changes", action='store_true')
+    parser.add_argument("--save", help="Write changes to manifests", action='store_true')
     parser.add_argument("src", help="Source path")
 
     args = parser.parse_args()
@@ -184,7 +191,10 @@ def main():
     # Always include the packages from the workstation-ostree-support group
     groups.append('workstation-ostree-support')
 
-    update_manifests_from_groups(comps, groups, 'fedora-common-ostree-pkgs.yaml', "common", args.save, comps_exclude_list, comps_exclude_list_all)
+    # Return code indicates if changes have or would have been done
+    ret = 0
+
+    ret += update_manifests_from_groups(comps, groups, 'fedora-common-ostree-pkgs.yaml', "common", args.save, comps_exclude_list, comps_exclude_list_all)
 
     # List of comps groups used for each desktop
     desktops_comps_groups = {
@@ -202,7 +212,10 @@ def main():
     # Generate treefiles for all desktops
     for desktop, groups in desktops_comps_groups.items():
         print()
-        update_manifests_from_groups(comps, groups, f'{desktop}-desktop-pkgs.yaml', desktop, args.save, comps_desktop_exclude_list, comps_exclude_list_all)
+        ret += update_manifests_from_groups(comps, groups, f'{desktop}-desktop-pkgs.yaml', desktop, args.save, comps_desktop_exclude_list, comps_exclude_list_all)
+
+    if not args.save and ret != 0:
+        sys.exit(1)
 
 if __name__ == "__main__":
     main()
