@@ -71,6 +71,24 @@ comps-sync:
     version="$(rpm-ostree compose tree --print-only --repo=repo fedora-${default_variant}.yaml | jq -r '."mutate-os-release"')"
     ./comps-sync.py --save fedora-comps/comps-f${version}.xml.in
 
+# Check if the manifests are in sync with the content of the comps groups
+comps-sync-check:
+    #!/bin/bash
+    set -euo pipefail
+
+    if [[ ! -d fedora-comps ]]; then
+        git clone https://pagure.io/fedora-comps.git
+    else
+        pushd fedora-comps > /dev/null || exit 1
+        git fetch
+        git reset --hard origin/main
+        popd > /dev/null || exit 1
+    fi
+
+    default_variant={{default_variant}}
+    version="$(rpm-ostree compose tree --print-only --repo=repo fedora-${default_variant}.yaml | jq -r '."mutate-os-release"')"
+    ./comps-sync.py fedora-comps/comps-f${version}.xml.in
+
 # Output the processed manifest for a given variant (defaults to Silverblue)
 manifest variant=default_variant:
     #!/bin/bash
