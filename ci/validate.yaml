@@ -17,6 +17,13 @@
         chdir: "{{ zuul.project.src_dir }}"
         cmd: just validate
 
+    - name: Verify that the comps and manifests are synced
+      ansible.builtin.shell:
+        chdir: "{{ zuul.project.src_dir }}"
+        cmd: "just validate comps-sync-check && touch .zuulci.comps"
+      # Still run the next step if this one fails
+      ignore_errors: true
+
     - name: Perform dependency resolution for Silverblue
       ansible.builtin.shell:
         chdir: "{{ zuul.project.src_dir }}"
@@ -53,4 +60,4 @@
     - name: Check if any previous dependency resolution steps failed
       ansible.builtin.shell:
         chdir: "{{ zuul.project.src_dir }}"
-        cmd: "[[ -f .zuulci.silverblue ]] && [[ -f .zuulci.kinoite ]] && [[ -f .zuulci.sericea ]] && [[ -f .zuulci.onyx ]]"
+        cmd: "[[ -f .zuulci.comps ]] &&  [[ -f .zuulci.silverblue ]] && [[ -f .zuulci.kinoite ]] && [[ -f .zuulci.sericea ]] && [[ -f .zuulci.onyx ]]"
