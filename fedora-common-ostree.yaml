@@ -31,6 +31,9 @@ packages:
   - buildah
   - podman
   - skopeo
+  # Keep slirp4netns for rootless containers until it's fully deprecated in podman
+  # See: https://github.com/fedora-silverblue/issue-tracker/issues/547
+  - slirp4netns
   # See: https://github.com/fedora-silverblue/issue-tracker/issues/503
   - systemd-container
   # Provides terminal tools like clear, reset, tput, and tset
