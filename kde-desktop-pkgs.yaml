@@ -25,6 +25,7 @@ packages:
   - kde-inotify-survey
   - kde-partitionmanager
   - kde-settings-pulseaudio
+  - kdebugsettings
   - kdegraphics-thumbnailers
   - kdeplasma-addons
   - kdialog
