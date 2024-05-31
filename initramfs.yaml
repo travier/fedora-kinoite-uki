@@ -27,3 +27,12 @@ postprocess:
     # save much space. So let's disable it to avoid the error-looking message.
     do_strip=no
     EOF
+
+  - |
+    #!/usr/bin/env bash
+    set -xeuo pipefail
+
+    cat > /usr/lib/dracut/dracut.conf.d/20-atomic-tpm-luks.conf << 'EOF'
+    # Add support for systemd-cryptsetup and tpm2-tss LUKS locking
+    add_dracutmodules+=" tpm2-tss systemd-pcrphase "
+    EOF
