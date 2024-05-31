@@ -12,6 +12,8 @@ include:
   # - bootupd.yaml
   # Dracut configuration for the initramfs
   - initramfs.yaml
+  # Read only sysroot
+  - sysroot-ro.yaml
 
 packages:
   # Ensure that we have a kernel. Kernel packages are not in any comps group
