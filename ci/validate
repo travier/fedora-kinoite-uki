@@ -30,7 +30,7 @@ for root, dirs, files, rootfd in os.fwalk('.'):
             print("Validating:", name)
             with open(os.open(name, dir_fd=rootfd, flags=os.O_RDONLY)) as f:
                 yaml.safe_load(f)
-            result = subprocess.run(['grep', '-RniEv', '^(  )*[a-z#/-]|^$|^#', name], encoding='UTF-8',
+            result = subprocess.run(['grep', '-RniEv', '^(  )*[a-z#/-]|^(  )*\\[|^$|^#', name], encoding='UTF-8',
                                     preexec_fn=lambda: os.fchdir(rootfd))
             if result.returncode == 0:
                 raise Exception("Found likely invalid indentation in YAML file: {}".format(name))
