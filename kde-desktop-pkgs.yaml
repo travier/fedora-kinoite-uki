@@ -37,6 +37,7 @@ packages:
   - kmenuedit
   - kmousetool
   - konsole
+  - krdp
   - krfb
   - kscreen
   - kscreenlocker
