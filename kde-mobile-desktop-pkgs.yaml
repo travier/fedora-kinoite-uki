@@ -1,0 +1,37 @@
+# DO NOT EDIT! This content is generated from comps-sync.py
+include: fedora-common-ostree.yaml
+packages:
+  - elisa-player
+  - haruna
+  - kalk
+  - kasts
+  - kclock
+  - keysmith
+  - koko
+  - krecorder
+  - kweather
+  - marknote
+  - mesa-dri-drivers
+  - mesa-vulkan-drivers
+  - neochat
+  - okular-mobile
+  - plasma-discover
+  - plasma-discover-notifier
+  - plasma-mobile
+  - plasma-mobile-sounds
+  - plymouth-system-theme
+  - qmlkonsole
+  - sddm
+  - sddm-themes
+  - sddm-wayland-plasma
+  - spacebar
+packages-x86_64:
+  - angelfish
+  - arianna
+  - kaidan
+  - tokodon
+packages-aarch64:
+  - angelfish
+  - arianna
+  - kaidan
+  - tokodon

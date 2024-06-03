@@ -21,6 +21,7 @@ build:
     - VARIANT:
       - silverblue
       - kinoite
+      - kinoite-mobile
       - sericea
       - vauxite
       - lazurite
