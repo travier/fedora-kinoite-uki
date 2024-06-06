@@ -13,3 +13,4 @@ packages:
 include:
   # - dnf5-bootc.yaml
   - bootupd.yaml
+  - composefs.yaml
