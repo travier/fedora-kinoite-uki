@@ -34,8 +34,8 @@ packages:
   - kfind
   - kinfocenter
   - kio-admin
+  - kjournald
   - kmenuedit
-  - kmousetool
   - konsole
   - krdp
   - krfb
