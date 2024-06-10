@@ -136,6 +136,32 @@ $ rpm-ostree rebase ostree-unverified-image:registry:<oci image>
 
 See [URL format for ostree native containers](https://coreos.github.io/rpm-ostree/container/#url-format-for-ostree-native-containers) for details.
 
+## Syncing with Fedora Comps
+
+[Fedora Comps](https://pagure.io/fedora-comps) are "XML files used by various
+Fedora tools to perform grouping of packages into functional groups."
+
+Changes to the comps files need to be regularly propagated to the repo so that
+the Fedora Atomic variants are kept updated with the other desktop variants.
+
+To update packages included in the Fedora Atomic variants, you need to have an
+up-to-date `git` checkout of https://pagure.io/fedora-comps and a `git` checkout
+of this repository.
+
+Using the `comps-sync.py` script, provide the updated input XML file to examine
+the changes as a dry-run:
+
+`$ ./comps-sync.py /path/to/fedora-comps/comps-f41.xml.in`
+
+Examine the changes and cross-reference them with PRs made to the `fedora-comps`
+repo. When you are satisfied that the changes are accurate and appear safe,
+re-run the script with the `--save` option:
+
+`$ ./comps-sync.py --save /path/to/fedora-comps/comps-f41.xml.in`
+
+Create a pull request with the changes and note any PRs from `fedora-comps`
+in the commit message that are relevant to the changes you have generated.
+
 ## Branching instructions for new Fedora releases
 
 Follow those steps during the Fedora branch process in Fedora:
