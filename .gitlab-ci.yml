@@ -22,8 +22,8 @@ build:
       - silverblue
       - kinoite
       - kinoite-mobile
-      - sericea
-      - vauxite
-      - lazurite
-      - onyx
-      - base
+      - sway-atomic
+      - xfce-atomic
+      - lxqt-atomic
+      - budgie-atomic
+      - base-atomic

@@ -47,23 +47,23 @@
     - name: Perform dependency resolution for Sway Atomic
       ansible.builtin.shell:
         chdir: "{{ zuul.project.src_dir }}"
-        cmd: "just compose-dry-run sericea && touch .zuulci.sericea"
+        cmd: "just compose-dry-run sway-atomic && touch .zuulci.sway-atomic"
       # Still run the next step if this one fails
       ignore_errors: true
 
     - name: Perform dependency resolution for Budgie Atomic
       ansible.builtin.shell:
         chdir: "{{ zuul.project.src_dir }}"
-        cmd: "just compose-dry-run onyx && touch .zuulci.onyx"
+        cmd: "just compose-dry-run budgie-atomic && touch .zuulci.budgie-atomic"
       # Still run the next step if this one fails
       ignore_errors: true
 
     - name: Compose the base variant
       ansible.builtin.command:
         chdir: "{{ zuul.project.src_dir }}"
-        cmd: just compose-legacy base
+        cmd: just compose-legacy base-atomic
 
     - name: Check if any previous dependency resolution steps failed
       ansible.builtin.shell:
         chdir: "{{ zuul.project.src_dir }}"
-        cmd: "[[ -f .zuulci.comps ]] &&  [[ -f .zuulci.silverblue ]] && [[ -f .zuulci.kinoite ]] && [[ -f .zuulci.sericea ]] && [[ -f .zuulci.onyx ]]"
+        cmd: "[[ -f .zuulci.comps ]] &&  [[ -f .zuulci.silverblue ]] && [[ -f .zuulci.kinoite ]] && [[ -f .zuulci.sway-atomic ]] && [[ -f .zuulci.budgie-atomic ]]"

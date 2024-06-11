@@ -14,11 +14,20 @@ pretty_names := '(
     [kinoite-nightly]="Kinoite"
     [kinoite-beta]="Kinoite"
     [kinoite-mobile]="Kinoite"
-    [sericea]="Sericea"
-    [onyx]="Onyx"
-    [vauxite]="Vauxite"
-    [lazurite]="Lazurite"
-    [base]="Base"
+    [sway-atomic]="Sway Atomic"
+    [budgie-atomic]="Budgie Atomic"
+    [xfce-atomic]="XFCE Atomic"
+    [lxqt-atomic]="LXQt Atomic"
+    [base-atomic]="Base Atomic"
+)'
+
+# Legacy names, used to keep some references stable
+legacy_names := '(
+    [base-atomic]="base"
+    [budgie-atomic]="onyx"
+    [lxqt-atomic]="lazurite"
+    [sway-atomic]="sericea"
+    [xfce-atomic]="vauxite"
 )'
 
 # subset of the map from https://pagure.io/pungi-fedora/blob/main/f/general.conf
@@ -28,11 +37,11 @@ volume_id_substitutions := '(
     [kinoite-nightly]="Kin"
     [kinoite-beta]="Kin"
     [kinoite-mobile]="Kin"
-    [sericea]="Src"
-    [onyx]="Onyx"
-    [vauxite]="Vxt"
-    [lazurite]="Lzr"
-    [base]="Base"
+    [sway-atomic]="SwA"
+    [budgie-atomic]="BdA"
+    [xfce-atomic]="XfA"
+    [lxqt-atomic]="LxA"
+    [base-atomic]="BsA"
 )'
 
 # Default is to only validate the manifests
@@ -342,8 +351,9 @@ upload-container variant=default_variant:
     #!/bin/bash
     set -euxo pipefail
 
-    declare -A pretty_names={{pretty_names}}
     variant={{variant}}
+
+    declare -A pretty_names={{pretty_names}}
     variant_pretty=${pretty_names[$variant]-}
     if [[ -z $variant_pretty ]]; then
         echo "Unknown variant"
@@ -366,7 +376,6 @@ upload-container variant=default_variant:
         version="$(rpm-ostree compose tree --print-only --repo=repo ${variant}.yaml | jq -r '."mutate-os-release"')"
     fi
 
-    image="quay.io/fedora-ostree-desktops/${variant}"
     buildid=""
     if [[ -f ".buildid" ]]; then
         buildid="$(< .buildid)"
@@ -383,6 +392,10 @@ upload-container variant=default_variant:
     fi
 
     skopeo login --username "${CI_REGISTRY_USER}" --password "${CI_REGISTRY_PASSWORD}" quay.io
+
+    # Copy to the new names
+    image="quay.io/fedora-ostree-desktops/${variant}"
+
     # Copy fully versioned tag (major version, build date/id, git commit)
     skopeo copy --retry-times 3 "oci-archive:${variant}.ociarchive" "docker://${image}:${version}.${buildid}.${git_commit}"
 
@@ -391,4 +404,17 @@ upload-container variant=default_variant:
     if [[ "${variant}" == "kinoite-nightly" ]]; then
         # Update latest tag for kinoite-nightly only
         skopeo copy --retry-times 3 "docker://${image}:${version}.${buildid}.${git_commit}" "docker://${image}:latest"
+    fi
+
+    # Copy to legacy names if needed
+    declare -A legacy_names={{legacy_names}}
+    variant_legacy=${legacy_names[$variant]-}
+    if [[ -n ${variant_legacy} ]]; then
+        image="quay.io/fedora-ostree-desktops/${variant_legacy}"
+
+        # Copy fully versioned tag (major version, build date/id, git commit)
+        skopeo copy --retry-times 3 "oci-archive:${variant}.ociarchive" "docker://${image}:${version}.${buildid}.${git_commit}"
+
+        # Update "un-versioned" tag (only major version)
+        skopeo copy --retry-times 3 "docker://${image}:${version}.${buildid}.${git_commit}" "docker://${image}:${version}"
     fi
