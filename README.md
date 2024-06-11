@@ -141,12 +141,23 @@ See [URL format for ostree native containers](https://coreos.github.io/rpm-ostre
 [Fedora Comps](https://pagure.io/fedora-comps) are "XML files used by various
 Fedora tools to perform grouping of packages into functional groups."
 
-Changes to the comps files need to be regularly propagated to the repo so that
+Changes to the comps files need to be regularly propagated to this repo so that
 the Fedora Atomic variants are kept updated with the other desktop variants.
 
-To update packages included in the Fedora Atomic variants, you need to have an
-up-to-date `git` checkout of https://pagure.io/fedora-comps and a `git` checkout
-of this repository.
+### Using `just`
+
+If you have the `just` command installed, you can run `just comps-sync` from a
+`git` checkout of this repo to update the packages included in the Fedora Atomic
+variants. Examine the changes and cross-reference them with PRs made to the
+`fedora-comps` repo. Create a pull request with the changes and note any PRs from
+`fedora-comps` in the commit message that are relevant to the changes you have
+generated.
+
+### Using `comps-sync.py` directly
+
+If you don't have `just` installed or want to run the `comps-sync.py` script
+directly, you need to have an up-to-date `git` checkout of
+https://pagure.io/fedora-comps and a `git` checkout of this repository.
 
 Using the `comps-sync.py` script, provide the updated input XML file to examine
 the changes as a dry-run:
