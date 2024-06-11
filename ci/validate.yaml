@@ -61,7 +61,7 @@
     - name: Compose the base variant
       ansible.builtin.command:
         chdir: "{{ zuul.project.src_dir }}"
-        cmd: just compose-legacy base-atomic
+        cmd: just compose-image base-atomic
 
     - name: Check if any previous dependency resolution steps failed
       ansible.builtin.shell:
