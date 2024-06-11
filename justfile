@@ -175,7 +175,7 @@ compose-legacy variant=default_variant:
 
     ${CMD} compose tree ${ARGS} \
         --add-metadata-string="version=${variant_pretty} ${version}.${buildid}" \
-        "${variant}.yaml" \
+        "${variant}-ostree.yaml" \
             |& tee "logs/${variant}_${version}_${buildid}.${timestamp}.log"
 
     if [[ ${EUID} -ne 0 ]]; then
