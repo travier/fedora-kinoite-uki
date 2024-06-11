@@ -52,7 +52,7 @@ sync:
     fi
 
     default_variant={{default_variant}}
-    version="$(rpm-ostree compose tree --print-only --repo=repo fedora-${default_variant}.yaml | jq -r '."mutate-os-release"')"
+    version="$(rpm-ostree compose tree --print-only --repo=repo ${default_variant}.yaml | jq -r '."mutate-os-release"')"
     ./comps-sync.py --save fedora-comps/comps-f${version}.xml.in
 
 # Sync the manifests with the content of the comps groups
@@ -70,7 +70,7 @@ comps-sync:
     fi
 
     default_variant={{default_variant}}
-    version="$(rpm-ostree compose tree --print-only --repo=repo fedora-${default_variant}.yaml | jq -r '."mutate-os-release"')"
+    version="$(rpm-ostree compose tree --print-only --repo=repo ${default_variant}.yaml | jq -r '."mutate-os-release"')"
     ./comps-sync.py --save fedora-comps/comps-f${version}.xml.in
 
 # Check if the manifests are in sync with the content of the comps groups
@@ -88,7 +88,7 @@ comps-sync-check:
     fi
 
     default_variant={{default_variant}}
-    version="$(rpm-ostree compose tree --print-only --repo=repo fedora-${default_variant}.yaml | jq -r '."mutate-os-release"')"
+    version="$(rpm-ostree compose tree --print-only --repo=repo ${default_variant}.yaml | jq -r '."mutate-os-release"')"
     ./comps-sync.py fedora-comps/comps-f${version}.xml.in
 
 # Output the processed manifest for a given variant (defaults to Silverblue)
@@ -104,7 +104,7 @@ manifest variant=default_variant:
         exit 1
     fi
 
-    rpm-ostree compose tree --print-only --repo=repo fedora-{{variant}}.yaml
+    rpm-ostree compose tree --print-only --repo=repo {{variant}}.yaml
 
 # Perform dependency resolution for a given variant (defaults to Silverblue)
 compose-dry-run variant=default_variant:
@@ -118,7 +118,7 @@ compose-dry-run variant=default_variant:
         popd > /dev/null || exit 1
     fi
 
-    rpm-ostree compose tree --unified-core --repo=repo --dry-run fedora-{{variant}}.yaml
+    rpm-ostree compose tree --unified-core --repo=repo --dry-run {{variant}}.yaml
 
 # Alias/shortcut for compose-image command
 compose variant=default_variant: (compose-image variant)
@@ -151,7 +151,7 @@ compose-legacy variant=default_variant:
     timestamp="$(date --iso-8601=sec)"
     echo "${buildid}" > .buildid
 
-    version="$(rpm-ostree compose tree --print-only --repo=repo fedora-${variant}.yaml | jq -r '."mutate-os-release"')"
+    version="$(rpm-ostree compose tree --print-only --repo=repo ${variant}.yaml | jq -r '."mutate-os-release"')"
     echo "Composing ${variant_pretty} ${version}.${buildid} ..."
 
     ARGS="--repo=repo --cachedir=cache"
@@ -166,7 +166,7 @@ compose-legacy variant=default_variant:
 
     ${CMD} compose tree ${ARGS} \
         --add-metadata-string="version=${variant_pretty} ${version}.${buildid}" \
-        "fedora-${variant}.yaml" \
+        "${variant}.yaml" \
             |& tee "logs/${variant}_${version}_${buildid}.${timestamp}.log"
 
     if [[ ${EUID} -ne 0 ]]; then
@@ -203,7 +203,7 @@ compose-image variant=default_variant:
     timestamp="$(date --iso-8601=sec)"
     echo "${buildid}" > .buildid
 
-    version="$(rpm-ostree compose tree --print-only --repo=repo fedora-${variant}.yaml | jq -r '."mutate-os-release"')"
+    version="$(rpm-ostree compose tree --print-only --repo=repo ${variant}.yaml | jq -r '."mutate-os-release"')"
     echo "Composing ${variant_pretty} ${version}.${buildid} ..."
 
     ARGS="--cachedir=cache --initialize"
@@ -218,8 +218,8 @@ compose-image variant=default_variant:
 
     ${CMD} compose image ${ARGS} \
          --label="quay.expires-after=4w" \
-        "fedora-${variant}.yaml" \
-        "fedora-${variant}.ociarchive"
+        "${variant}.yaml" \
+        "${variant}.ociarchive"
 
 # Clean up everything
 clean-all:
@@ -270,7 +270,7 @@ lorax variant=default_variant:
         popd > /dev/null || exit 1
     fi
 
-    version_number="$(rpm-ostree compose tree --print-only --repo=repo fedora-${variant}.yaml | jq -r '."mutate-os-release"')"
+    version_number="$(rpm-ostree compose tree --print-only --repo=repo ${variant}.yaml | jq -r '."mutate-os-release"')"
     if [[ "$(git rev-parse --abbrev-ref HEAD)" == "main" ]] || [[ -f "fedora-rawhide.repo" ]]; then
         version_pretty="Rawhide"
         version="rawhide"
@@ -363,7 +363,7 @@ upload-container variant=default_variant:
     if [[ "$(git rev-parse --abbrev-ref HEAD)" == "main" ]] || [[ -f "fedora-rawhide.repo" ]]; then
         version="rawhide"
     else
-        version="$(rpm-ostree compose tree --print-only --repo=repo fedora-${variant}.yaml | jq -r '."mutate-os-release"')"
+        version="$(rpm-ostree compose tree --print-only --repo=repo ${variant}.yaml | jq -r '."mutate-os-release"')"
     fi
 
     image="quay.io/fedora-ostree-desktops/${variant}"
@@ -384,7 +384,8 @@ upload-container variant=default_variant:
 
     skopeo login --username "${CI_REGISTRY_USER}" --password "${CI_REGISTRY_PASSWORD}" quay.io
     # Copy fully versioned tag (major version, build date/id, git commit)
-    skopeo copy --retry-times 3 "oci-archive:fedora-${variant}.ociarchive" "docker://${image}:${version}.${buildid}.${git_commit}"
+    skopeo copy --retry-times 3 "oci-archive:${variant}.ociarchive" "docker://${image}:${version}.${buildid}.${git_commit}"
+
     # Update "un-versioned" tag (only major version)
     skopeo copy --retry-times 3 "docker://${image}:${version}.${buildid}.${git_commit}" "docker://${image}:${version}"
     if [[ "${variant}" == "kinoite-nightly" ]]; then

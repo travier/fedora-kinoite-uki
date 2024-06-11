@@ -1,6 +1,6 @@
 include:
   - common.yaml
-  - gnome-desktop-pkgs.yaml
+  - silverblue-packages.yaml
 
 ref: fedora/rawhide/${basearch}/silverblue
 rojig:

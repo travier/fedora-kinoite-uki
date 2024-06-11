@@ -1,6 +1,6 @@
 include:
   - common.yaml
-  - deepin-desktop-pkgs.yaml
+  - deepin-atomic-packages.yaml
 
 ref: fedora/rawhide/${basearch}/deepin
 rojig:

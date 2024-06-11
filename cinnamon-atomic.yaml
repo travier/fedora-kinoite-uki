@@ -1,6 +1,6 @@
 include:
   - common.yaml
-  - cinnamon-desktop-pkgs.yaml
+  - cinnamon-atomic-packages.yaml
 
 ref: fedora/rawhide/${basearch}/cinnamon
 rojig:

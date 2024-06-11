@@ -1,6 +1,6 @@
 include:
   - common.yaml
-  - budgie-desktop-pkgs.yaml
+  - budgie-atomic-packages.yaml
 
 ref: fedora/rawhide/${basearch}/onyx
 rojig:

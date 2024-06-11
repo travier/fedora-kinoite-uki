@@ -1,6 +1,6 @@
 include:
   - common.yaml
-  - lxqt-desktop-pkgs.yaml
+  - lxqt-atomic-packages.yaml
 
 ref: fedora/rawhide/${basearch}/lazurite
 rojig:

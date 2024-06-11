@@ -118,7 +118,7 @@ def compare_comps_manifest_package_lists(comps_group_pkgs, manifest_packages):
 
     return comps_unknown, pkgs_added
 
-def update_manifests_from_groups(comps, groups, path, desktop, save, comps_exclude_list, comps_exclude_list_all):
+def update_manifests_from_groups(comps, groups, path, variant, save, comps_exclude_list, comps_exclude_list_all):
     manifest_packages = load_packages_from_manifest(path)
 
     comps_group_pkgs = {}
@@ -131,10 +131,10 @@ def update_manifests_from_groups(comps, groups, path, desktop, save, comps_exclu
     n_manifest_new = len(comps_unknown)
     n_comps_new = len(pkgs_added)
 
-    if desktop == "common":
+    if variant == "common":
         print(f'Syncing common packages:\t+{n_comps_new}, -{n_manifest_new}')
     else:
-        print(f'Syncing packages for {desktop}:\t+{n_comps_new}, -{n_manifest_new}')
+        print(f'Syncing packages for {variant}:\t+{n_comps_new}, -{n_manifest_new}')
     if n_manifest_new != 0:
         for (pkg, arch) in sorted(comps_unknown, key = lambda x: x[0]):
             manifest_packages[arch].remove(pkg)
@@ -191,24 +191,24 @@ def main():
 
     ret += update_manifests_from_groups(comps, groups, 'common-packages.yaml', "common", args.save, comps_exclude_list, comps_exclude_list_all)
 
-    # List of comps groups used for each desktop
-    desktops_comps_groups = {
-        "gnome": ["gnome-desktop", "base-x"],
-        "kde": ["kde-desktop", "base-graphical"],
-        "kde-mobile": ["kde-mobile", "kde-mobile-apps", "base-graphical"],
-        "xfce": ["xfce-desktop", "xfce-apps", "xfce-extra-plugins", "base-x"],
-        "lxqt": ["lxqt-desktop", "base-graphical"],
-        "deepin": ["deepin-desktop", "base-x"],
-        "mate": ["mate-desktop", "base-x"],
-        "sway": ["swaywm", "swaywm-extended", "base-graphical"],
-        "cinnamon": ["cinnamon-desktop", "base-x"],
-        "budgie": ["budgie-desktop", "budgie-desktop-apps", "base-x"]
+    # List of comps groups used for each variant
+    variant_comps_groups = {
+        "budgie-atomic": ["budgie-desktop", "budgie-desktop-apps", "base-x"],
+        "cinnamon-atomic": ["cinnamon-desktop", "base-x"],
+        "deepin-atomic": ["deepin-desktop", "base-x"],
+        "kinoite": ["kde-desktop", "base-graphical"],
+        "kinoite-mobile": ["kde-mobile", "kde-mobile-apps", "base-graphical"],
+        "lxqt-atomic": ["lxqt-desktop", "base-graphical"],
+        "mate-atomic": ["mate-desktop", "base-x"],
+        "silverblue": ["gnome-desktop", "base-x"],
+        "sway-atomic": ["swaywm", "swaywm-extended", "base-graphical"],
+        "xfce-atomic": ["xfce-desktop", "xfce-apps", "xfce-extra-plugins", "base-x"],
     }
 
-    # Generate treefiles for all desktops
-    for desktop, groups in desktops_comps_groups.items():
+    # Generate treefiles for all variants
+    for variant, groups in variant_comps_groups.items():
         print()
-        ret += update_manifests_from_groups(comps, groups, f'{desktop}-desktop-pkgs.yaml', desktop, args.save, comps_desktop_exclude_list, comps_exclude_list_all)
+        ret += update_manifests_from_groups(comps, groups, f'{variant}-packages.yaml', variant, args.save, comps_desktop_exclude_list, comps_exclude_list_all)
 
     if not args.save and ret != 0:
         sys.exit(1)

@@ -1,11 +1,11 @@
 include:
   - common.yaml
-  - kde-mobile-desktop-pkgs.yaml
+  - kinoite-packages.yaml
 
-ref: fedora/rawhide/${basearch}/kinoite-mobile
+ref: fedora/rawhide/${basearch}/kinoite
 rojig:
   name: fedora-kde
-  summary: "Fedora Kinoite Mobile"
+  summary: "Fedora Kinoite"
   license: MIT
 
 packages:
@@ -24,6 +24,7 @@ packages:
   # Make sure that modem support is installed
   - NetworkManager-ppp
   # Install gdb to make getting backtraces work with DrKonqi
+  # The dnf dependency is excluded in the common manifest
   - gdb
 
 # Make sure the following are not pulled in when Recommended by other packages
@@ -38,6 +39,15 @@ exclude-packages:
   # Ensure we do not include X11 support
   - plasma-x11
   - plasma-workspace-x11
+
+# Kinoite specific workarounds and configuration
+postprocess:
+  - |
+    #!/bin/bash
+    set -xeuo pipefail
+
+    # Enable auto updates in Discover
+    echo -e "[Global]\nUseUnattendedUpdates=true\n" > /etc/xdg/PlasmaDiscoverUpdates
 
 # Kept in the leaf manifest as they are overwritten by Pungi in composes
 repos:

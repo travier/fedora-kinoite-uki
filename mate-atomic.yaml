@@ -1,19 +1,21 @@
 include:
   - common.yaml
-  - xfce-desktop-pkgs.yaml
+  - mate-atomic-packages.yaml
 
-ref: fedora/rawhide/${basearch}/vauxite
+ref: fedora/rawhide/${basearch}/mate
 rojig:
-  name: fedora-vauxite
-  summary: "Fedora XFCE Atomic"
+  name: fedora-mate
+  summary: "Fedora Mate Atomic"
   license: MIT
 
 packages:
-  - fedora-release-xfce
   # Generic release sub package for desktop variants
   - fedora-release-ostree-desktop
   # Portals for Flatpak
   - xdg-desktop-portal-gtk
+
+exclude-packages:
+  - python3-unbound
 
 # Kept in the leaf manifest as they are overwritten by Pungi in composes
 repos:

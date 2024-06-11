@@ -1,6 +1,6 @@
 include:
   - common.yaml
-  - sway-desktop-pkgs.yaml
+  - sway-atomic-packages.yaml
 
 ref: fedora/rawhide/${basearch}/sericea
 rojig:
