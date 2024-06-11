@@ -1,4 +1,7 @@
-include: deepin-desktop-pkgs.yaml
+include:
+  - common.yaml
+  - deepin-desktop-pkgs.yaml
+
 ref: fedora/rawhide/${basearch}/deepin
 rojig:
   name: fedora-deepin

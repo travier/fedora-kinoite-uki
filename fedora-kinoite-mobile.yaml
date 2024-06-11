@@ -1,4 +1,5 @@
 include:
+  - common.yaml
   - kde-mobile-desktop-pkgs.yaml
 
 ref: fedora/rawhide/${basearch}/kinoite-mobile

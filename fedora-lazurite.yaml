@@ -1,4 +1,7 @@
-include: lxqt-desktop-pkgs.yaml
+include:
+  - common.yaml
+  - lxqt-desktop-pkgs.yaml
+
 ref: fedora/rawhide/${basearch}/lazurite
 rojig:
   name: fedora-lxqt

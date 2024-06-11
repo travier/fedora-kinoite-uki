@@ -1,4 +1,7 @@
-include: xfce-desktop-pkgs.yaml
+include:
+  - common.yaml
+  - xfce-desktop-pkgs.yaml
+
 ref: fedora/rawhide/${basearch}/vauxite
 rojig:
   name: fedora-vauxite

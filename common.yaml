@@ -7,7 +7,8 @@ container-cmd:
   - /usr/bin/bash
 
 include:
-  - fedora-common-ostree-pkgs.yaml
+  # Packages common to all variants
+  - common-packages.yaml
   # See: https://gitlab.com/fedora/ostree/sig/-/issues/1
   # - bootupd.yaml
   # Dracut configuration for the initramfs

@@ -1,4 +1,7 @@
-include: gnome-desktop-pkgs.yaml
+include:
+  - common.yaml
+  - gnome-desktop-pkgs.yaml
+
 ref: fedora/rawhide/${basearch}/silverblue
 rojig:
   name: fedora-silverblue

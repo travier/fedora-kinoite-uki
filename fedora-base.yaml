@@ -1,4 +1,6 @@
-include: fedora-common-ostree.yaml
+include:
+  - common.yaml
+
 ref: fedora/rawhide/${basearch}/base
 rojig:
   name: fedora-base

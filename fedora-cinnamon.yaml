@@ -1,4 +1,7 @@
-include: cinnamon-desktop-pkgs.yaml
+include:
+  - common.yaml
+  - cinnamon-desktop-pkgs.yaml
+
 ref: fedora/rawhide/${basearch}/cinnamon
 rojig:
   name: fedora-cinnamon

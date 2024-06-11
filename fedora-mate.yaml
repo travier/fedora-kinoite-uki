@@ -1,4 +1,7 @@
-include: mate-desktop-pkgs.yaml
+include:
+  - common.yaml
+  - mate-desktop-pkgs.yaml
+
 ref: fedora/rawhide/${basearch}/mate
 rojig:
   name: fedora-mate

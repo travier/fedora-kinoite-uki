@@ -32,12 +32,10 @@ def format_pkgtype(pkgtype):
         return 'mandatory'
     assert False
 
-def write_manifest(fpath, pkgs, include=None):
+def write_manifest(fpath, pkgs):
     '''Write the package list in a manifest.'''
     with open(fpath, 'w', encoding='UTF-8') as f:
         f.write("# DO NOT EDIT! This content is generated from comps-sync.py\n")
-        if include is not None:
-            f.write(f'include: {include}\n')
         f.write("packages:\n")
         for pkg in sorted(pkgs['all']):
             f.write(f'  - {pkg}\n')
@@ -154,10 +152,7 @@ def update_manifests_from_groups(comps, groups, path, desktop, save, comps_exclu
 
     if (n_manifest_new > 0 or n_comps_new > 0):
         if save:
-            if desktop == "common":
-                write_manifest(path, manifest_packages)
-            else:
-                write_manifest(path, manifest_packages, include="fedora-common-ostree.yaml")
+            write_manifest(path, manifest_packages)
         return 1
     return 0
 
@@ -194,7 +189,7 @@ def main():
     # Return code indicates if changes have or would have been done
     ret = 0
 
-    ret += update_manifests_from_groups(comps, groups, 'fedora-common-ostree-pkgs.yaml', "common", args.save, comps_exclude_list, comps_exclude_list_all)
+    ret += update_manifests_from_groups(comps, groups, 'common-packages.yaml', "common", args.save, comps_exclude_list, comps_exclude_list_all)
 
     # List of comps groups used for each desktop
     desktops_comps_groups = {
