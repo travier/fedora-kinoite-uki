@@ -397,7 +397,8 @@ upload-container variant=default_variant:
     # Copy to the new names
     image="quay.io/fedora-ostree-desktops/${variant}"
 
-    SKOPEO_ARGS="--retry-times 3"
+    # Use '--dest-compress-format zstd:chunked' only once 41 is released
+    SKOPEO_ARGS="--retry-times 3 --dest-compress-format gzip"
 
     # Copy fully versioned tag (major version, build date/id, git commit)
     skopeo copy ${SKOPEO_ARGS} \
