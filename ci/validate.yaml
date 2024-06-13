@@ -1,5 +1,11 @@
 - hosts: all
   tasks:
+    - name: Upgrade all packages
+      ansible.builtin.dnf:
+        name: "*"
+        state: latest
+      become: true
+
     - name: Install dependencies
       package:
         name:
