@@ -10,5 +10,6 @@ packages:
   # - dnf5-plugins
   - bootc
 
-# include:
-#   - dnf5-bootc.yaml
+include:
+  # - dnf5-bootc.yaml
+  - bootupd.yaml

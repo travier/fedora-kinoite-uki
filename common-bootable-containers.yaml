@@ -1,3 +1,4 @@
 # Manifests includes that are common only to Bootable Containers
 include:
   - dnf5-bootc.yaml
+  - bootupd.yaml
