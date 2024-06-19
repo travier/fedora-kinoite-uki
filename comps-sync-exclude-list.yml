@@ -106,6 +106,9 @@ exclude_list:
     - cups-pk-helper
     # For now...
     - ghostscript
+  workstation-ostree-support:
+    # Now only included in the legacy ostree variants
+    - ostree-grub2
 
 # Desktop environment specific exclude lists
 desktop_exclude_list:
