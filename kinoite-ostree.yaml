@@ -1,5 +1,6 @@
 include:
   - kinoite-common.yaml
+  - common-ostree.yaml
 
 # Kept in the leaf manifest as they are overwritten by Pungi in composes
 repos:

@@ -19,12 +19,13 @@ exclude_list_all_regexp:
 # Common exclude list for all ostree desktop versions
 exclude_list:
   core:
-    # We use rpm-ostree for the host
+    # Make sure we only pull-in dnf5 and not dnf4 or yum
     - dnf
     - dnf-plugins-core
+    - yum
+    # We include dnf5 in another manifest, only for bootable containers
     - dnf5
     - dnf5-plugins
-    - yum
     # Not sure why this is there at all
     - dracut-config-rescue
     # Eh...you can install this in a priv container
@@ -36,14 +37,15 @@ exclude_list:
     # Why?
     - ncurses
   workstation-product:
-    # We use rpm-ostree for the host
+    # Make sure we only pull-in dnf5 and not dnf4 or yum
     - dnf
     - dnf-plugins-core
-    - dnf5
-    - dnf5-plugins
     - deltarpm
     - python3-dnf-plugin-system-upgrade
     - python3-dnf-plugins-core
+    # We include dnf5 in another manifest, only for bootable containers
+    - dnf5
+    - dnf5-plugins
     # We use fedora-release-silverblue instead
     - fedora-release-workstation
     # Really not worth listing explicitly
@@ -58,7 +60,7 @@ exclude_list:
     # We removed cronie a while ago, should nuke these too
     - crontabs
     - at
-    # This drags in a huge dependency set of dnf bits
+    # See: https://gitlab.com/fedora/ostree/sig/-/issues/30
     - abrt-cli
     - abrt-desktop
     - abrt-java-connector
