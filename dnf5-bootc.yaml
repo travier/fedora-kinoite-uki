@@ -1,0 +1,6 @@
+# Add DNF5 and bootc for Bootable Container images
+# See: https://fedoraproject.org/wiki/Changes/DNFAndBootcInImageModeFedora
+packages:
+  - dnf5
+  - dnf5-plugins
+  - bootc

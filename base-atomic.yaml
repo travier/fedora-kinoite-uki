@@ -1,5 +1,6 @@
 include:
   - common.yaml
+  - common-bootable-containers.yaml
 
 ref: fedora/rawhide/${basearch}/base
 rojig:

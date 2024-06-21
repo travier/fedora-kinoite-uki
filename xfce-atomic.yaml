@@ -1,6 +1,7 @@
 include:
   - common.yaml
   - xfce-atomic-packages.yaml
+  - common-bootable-containers.yaml
 
 ref: fedora/rawhide/${basearch}/vauxite
 rojig:

@@ -1,6 +1,7 @@
 include:
   - common.yaml
   - deepin-atomic-packages.yaml
+  - common-bootable-containers.yaml
 
 ref: fedora/rawhide/${basearch}/deepin
 rojig:

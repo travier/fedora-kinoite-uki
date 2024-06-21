@@ -1,0 +1,14 @@
+# Manifests includes that are common only to Bootable Containers
+
+# Temporary Kinoite only manifest
+# See https://pagure.io/fedora-kde/SIG/issue/519
+
+# Add DNF5 and bootc for Bootable Container images
+# See: https://fedoraproject.org/wiki/Changes/DNFAndBootcInImageModeFedora
+packages:
+  # - dnf5
+  # - dnf5-plugins
+  - bootc
+
+# include:
+#   - dnf5-bootc.yaml

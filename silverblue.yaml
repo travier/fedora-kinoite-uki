@@ -1,5 +1,6 @@
 include:
   - silverblue-common.yaml
+  - common-bootable-containers.yaml
 
 # Kept in the leaf manifest as they are overwritten by Pungi in composes
 repos:
