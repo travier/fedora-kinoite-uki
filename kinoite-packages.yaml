@@ -16,7 +16,6 @@ packages:
   - flatpak-kcm
   - fprintd-pam
   - glibc-all-langpacks
-  - gnome-keyring-pam
   - kaccounts-integration-qt6
   - kcharselect
   - kde-connect
