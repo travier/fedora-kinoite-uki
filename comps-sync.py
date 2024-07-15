@@ -200,7 +200,7 @@ def main():
         "kinoite-mobile": ["kde-mobile", "kde-mobile-apps", "base-graphical"],
         "lxqt-atomic": ["lxqt-desktop", "base-graphical"],
         "mate-atomic": ["mate-desktop", "base-x"],
-        "silverblue": ["gnome-desktop", "base-x"],
+        "silverblue": ["gnome-desktop", "base-graphical"],
         "sway-atomic": ["swaywm", "swaywm-extended", "base-graphical"],
         "xfce-atomic": ["xfce-desktop", "xfce-apps", "xfce-extra-plugins", "base-x"],
     }
