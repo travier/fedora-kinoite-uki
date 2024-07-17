@@ -82,11 +82,11 @@ packages:
   - hplip
   - hunspell
   - ibus-anthy
+  - ibus-chewing
   - ibus-gtk3
   - ibus-gtk4
   - ibus-hangul
   - ibus-libpinyin
-  - ibus-libzhuyin
   - ibus-m17n
   - ibus-typing-booster
   - intel-gpu-firmware

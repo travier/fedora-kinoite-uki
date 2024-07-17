@@ -16,6 +16,8 @@ packages:
   - gnome-keyring-pam
   - gnome-themes-extra
   - grim
+  - gvfs
+  - gvfs-smb
   - imv
   - kanshi
   - lxqt-policykit
@@ -43,6 +45,7 @@ packages:
   - wl-clipboard
   - wlr-randr
   - wlsunset
+  - xarchiver
   - xdg-desktop-portal-gtk
   - xdg-desktop-portal-wlr
   - xorg-x11-server-Xwayland
