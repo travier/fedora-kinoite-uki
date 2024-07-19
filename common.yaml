@@ -58,6 +58,8 @@ packages:
   # Always include at least full English language support by default
   # https://gitlab.com/fedora/ostree/sig/-/issues/14
   - langpacks-en
+  # Workaround for https://github.com/ostreedev/ostree/issues/1469
+  - add-determinism
 
 selinux: true
 documentation: true
@@ -141,3 +143,6 @@ postprocess:
     # Fix triggerin for samba-client in cups package (not supported by rpm-ostree yet)
     # https://github.com/fedora-silverblue/issue-tracker/issues/532
     ln -snf /usr/libexec/samba/cups_backend_smb /usr/lib/cups/backend/smb
+
+    # Workaround for https://github.com/ostreedev/ostree/issues/1469
+    add-determinism -j --handler pyc-zero-mtime /usr
