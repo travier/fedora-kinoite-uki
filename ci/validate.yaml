@@ -1,5 +1,9 @@
 - hosts: all
   tasks:
+    - name: Install system dependencies
+      shell: dnf install -y python3-libdnf5
+      become: true
+
     - name: Upgrade all packages
       ansible.builtin.dnf:
         name: "*"
