@@ -184,6 +184,8 @@ desktop_exclude_list:
     # Remove initial-setup from Kinoite
     # See: https://fedoraproject.org/wiki/Changes/KDERemoveInitialSetup
     - initial-setup-gui
+    # Already included in all Atomic Desktops by default
+    - toolbox
   xfce-desktop:
     # Incompatible with ostree for various reasons
     - abrt-desktop
