@@ -18,6 +18,7 @@ packages:
   - plasma-discover-notifier
   - plasma-mobile
   - plasma-mobile-sounds
+  - plasma-settings
   - plymouth-system-theme
   - qmlkonsole
   - sddm
