@@ -1,6 +1,4 @@
-# Manifest common to classic ostree varaints only and not Bootable Containers
-include:
-  - bootupd.yaml
+# Manifest for classic ostree varaints only and not Bootable Containers
 
 # Packages only included in the legacy ostree variants and not in Bootable
 # Containers

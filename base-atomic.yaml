@@ -1,6 +1,9 @@
+variables:
+  bootable_container: true
+  variant: "base-atomic"
+
 include:
   - common.yaml
-  - common-bootable-containers.yaml
 
 ref: fedora/rawhide/${basearch}/base
 rojig:

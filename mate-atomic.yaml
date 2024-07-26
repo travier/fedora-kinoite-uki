@@ -1,7 +1,10 @@
+variables:
+  bootable_container: true
+  variant: "mate-atomic"
+
 include:
   - common.yaml
   - mate-atomic-packages.yaml
-  - common-bootable-containers.yaml
 
 ref: fedora/rawhide/${basearch}/mate
 rojig:

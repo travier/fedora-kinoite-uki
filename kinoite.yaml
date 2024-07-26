@@ -1,6 +1,8 @@
+variables:
+  bootable_container: true
+
 include:
   - kinoite-common.yaml
-  - common-bootable-containers-kinoite.yaml
 
 # Kept in the leaf manifest as they are overwritten by Pungi in composes
 repos:

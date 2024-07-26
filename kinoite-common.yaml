@@ -1,3 +1,6 @@
+variables:
+  variant: "kinoite"
+
 include:
   - common.yaml
   - kinoite-packages.yaml

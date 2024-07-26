@@ -10,11 +10,30 @@ include:
   # Packages common to all variants
   - common-packages.yaml
   # See: https://gitlab.com/fedora/ostree/sig/-/issues/1
-  # - bootupd.yaml
+  - bootupd.yaml
   # Dracut configuration for the initramfs
   - initramfs.yaml
   # Read only sysroot
   - sysroot-ro.yaml
+
+conditional-include:
+  # Manifests included only for classic ostree variants
+  - if: bootable_container == false
+    include:
+      - ostree-classic.yaml
+  # Manifests included only for the Bootable Container variants
+  - if: bootable_container == true
+    include:
+      - composefs.yaml
+      - bootc.yaml
+  # Only include dnf5 for non KDE Bootable Containers until
+  # https://pagure.io/fedora-kde/SIG/issue/519
+  - if:
+    - bootable_container == true
+    - variant != "kinoite"
+    - variant != "kinoite-mobile"
+    include:
+      - dnf5.yaml
 
 packages:
   # Ensure that we have a kernel. Kernel packages are not in any comps group

@@ -1,3 +1,6 @@
+variables:
+  variant: "budgie-atomic"
+
 include:
   - common.yaml
   - budgie-atomic-packages.yaml

@@ -1,7 +1,10 @@
+variables:
+  bootable_container: true
+  variant: "kinoite-mobile"
+
 include:
   - common.yaml
   - kinoite-mobile-packages.yaml
-  - common-bootable-containers-kinoite.yaml
 
 ref: fedora/rawhide/${basearch}/kinoite-mobile
 rojig:

@@ -1,7 +1,10 @@
+variables:
+  bootable_container: true
+  variant: "cinnamon-atomic"
+
 include:
   - common.yaml
   - cinnamon-atomic-packages.yaml
-  - common-bootable-containers.yaml
 
 ref: fedora/rawhide/${basearch}/cinnamon
 rojig:
