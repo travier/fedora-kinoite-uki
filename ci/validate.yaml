@@ -37,10 +37,24 @@
       # Still run the next step if this one fails
       ignore_errors: true
 
+    - name: Perform dependency resolution for Silverblue (ostree classic)
+      ansible.builtin.shell:
+        chdir: "{{ zuul.project.src_dir }}"
+        cmd: "just compose-dry-run silverblue-ostree && touch .zuulci.silverblue-ostree"
+      # Still run the next step if this one fails
+      ignore_errors: true
+
     - name: Perform dependency resolution for Kinoite
       ansible.builtin.shell:
         chdir: "{{ zuul.project.src_dir }}"
         cmd: "just compose-dry-run kinoite && touch .zuulci.kinoite"
+      # Still run the next step if this one fails
+      ignore_errors: true
+
+    - name: Perform dependency resolution for Kinoite (ostree classic)
+      ansible.builtin.shell:
+        chdir: "{{ zuul.project.src_dir }}"
+        cmd: "just compose-dry-run kinoite-ostree && touch .zuulci.kinoite-ostree"
       # Still run the next step if this one fails
       ignore_errors: true
 
@@ -51,10 +65,24 @@
       # Still run the next step if this one fails
       ignore_errors: true
 
+    - name: Perform dependency resolution for Sway Atomic (ostree classic)
+      ansible.builtin.shell:
+        chdir: "{{ zuul.project.src_dir }}"
+        cmd: "just compose-dry-run sway-atomic-ostree && touch .zuulci.sway-atomic-ostree"
+      # Still run the next step if this one fails
+      ignore_errors: true
+
     - name: Perform dependency resolution for Budgie Atomic
       ansible.builtin.shell:
         chdir: "{{ zuul.project.src_dir }}"
         cmd: "just compose-dry-run budgie-atomic && touch .zuulci.budgie-atomic"
+      # Still run the next step if this one fails
+      ignore_errors: true
+
+    - name: Perform dependency resolution for Budgie Atomic (ostree classic)
+      ansible.builtin.shell:
+        chdir: "{{ zuul.project.src_dir }}"
+        cmd: "just compose-dry-run budgie-atomic-ostree && touch .zuulci.budgie-atomic-ostree"
       # Still run the next step if this one fails
       ignore_errors: true
 
@@ -66,4 +94,4 @@
     - name: Check if any previous dependency resolution steps failed
       ansible.builtin.shell:
         chdir: "{{ zuul.project.src_dir }}"
-        cmd: "[[ -f .zuulci.comps ]] &&  [[ -f .zuulci.silverblue ]] && [[ -f .zuulci.kinoite ]] && [[ -f .zuulci.sway-atomic ]] && [[ -f .zuulci.budgie-atomic ]]"
+        cmd: "[[ -f .zuulci.comps ]] &&  [[ -f .zuulci.silverblue ]] &&  [[ -f .zuulci.silverblue-ostree ]] && [[ -f .zuulci.kinoite ]] && [[ -f .zuulci.kinoite-ostree ]] && [[ -f .zuulci.sway-atomic ]] && [[ -f .zuulci.sway-atomic-ostree ]] && [[ -f .zuulci.budgie-atomic ]]  && [[ -f .zuulci.budgie-atomic-ostree ]]"
