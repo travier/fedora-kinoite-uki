@@ -16,6 +16,14 @@ include:
   # Read only sysroot
   - sysroot-ro.yaml
 
+# systemd-pcrphase module fails on ppc64le:
+# https://gitlab.com/fedora/ostree/sig/-/issues/44
+arch-include:
+  x86_64:
+    - initramfs-tpm-luks.yaml
+  aarch64:
+    - initramfs-tpm-luks.yaml
+
 conditional-include:
   # Manifests included only for classic ostree variants
   - if: bootable_container == false
