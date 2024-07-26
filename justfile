@@ -105,14 +105,6 @@ manifest variant=default_variant:
     #!/bin/bash
     set -euo pipefail
 
-    declare -A pretty_names={{pretty_names}}
-    variant={{variant}}
-    variant_pretty=${pretty_names[$variant]-}
-    if [[ -z $variant_pretty ]]; then
-        echo "Unknown variant"
-        exit 1
-    fi
-
     rpm-ostree compose tree --print-only --repo=repo {{variant}}.yaml
 
 # Perform dependency resolution for a given variant (defaults to Silverblue)
