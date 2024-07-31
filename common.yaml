@@ -34,13 +34,6 @@ conditional-include:
     include:
       - composefs.yaml
       - bootc.yaml
-  # Only include dnf5 for non KDE Bootable Containers until
-  # https://pagure.io/fedora-kde/SIG/issue/519
-  - if:
-    - bootable_container == true
-    - variant != "kinoite"
-    - variant != "kinoite-mobile"
-    include:
       - dnf5.yaml
 
 packages:
