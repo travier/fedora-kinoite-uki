@@ -6,7 +6,7 @@ include:
   - common.yaml
   - kinoite-mobile-packages.yaml
 
-ref: fedora/rawhide/${basearch}/kinoite-mobile
+ref: fedora/41/${basearch}/kinoite-mobile
 rojig:
   name: fedora-kde
   summary: "Fedora Kinoite Mobile"
@@ -46,5 +46,5 @@ exclude-packages:
 # Kept in the leaf manifest as they are overwritten by Pungi in composes
 repos:
   - fedora-rawhide
-  # - fedora-41
-  # - fedora-41-updates
+  - fedora-41
+  - fedora-41-updates

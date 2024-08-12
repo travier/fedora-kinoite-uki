@@ -5,7 +5,7 @@ include:
   - common.yaml
   - budgie-atomic-packages.yaml
 
-ref: fedora/rawhide/${basearch}/onyx
+ref: fedora/41/${basearch}/onyx
 rojig:
   name: fedora-onyx
   summary: "Fedora Budgie Atomic"

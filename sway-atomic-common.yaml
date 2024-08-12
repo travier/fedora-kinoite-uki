@@ -5,7 +5,7 @@ include:
   - common.yaml
   - sway-atomic-packages.yaml
 
-ref: fedora/rawhide/${basearch}/sericea
+ref: fedora/41/${basearch}/sericea
 rojig:
   name: fedora-sericea
   summary: "Fedora Sway Atomic"

@@ -5,7 +5,7 @@ include:
   - common.yaml
   - silverblue-packages.yaml
 
-ref: fedora/rawhide/${basearch}/silverblue
+ref: fedora/41/${basearch}/silverblue
 rojig:
   name: fedora-silverblue
   summary: "Fedora Silverblue"

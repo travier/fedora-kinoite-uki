@@ -5,7 +5,7 @@ variables:
 include:
   - common.yaml
 
-ref: fedora/rawhide/${basearch}/base
+ref: fedora/41/${basearch}/base
 rojig:
   name: fedora-base
   summary: "Fedora Base Atomic"
@@ -24,5 +24,5 @@ packages:
 # Kept in the leaf manifest as they are overwritten by Pungi in composes
 repos:
   - fedora-rawhide
-  # - fedora-41
-  # - fedora-41-updates
+  - fedora-41
+  - fedora-41-updates

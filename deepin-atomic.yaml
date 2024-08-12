@@ -6,7 +6,7 @@ include:
   - common.yaml
   - deepin-atomic-packages.yaml
 
-ref: fedora/rawhide/${basearch}/deepin
+ref: fedora/41/${basearch}/deepin
 rojig:
   name: fedora-deepin
   summary: "Fedora Deepin Atomic"
@@ -22,5 +22,5 @@ packages:
 # Kept in the leaf manifest as they are overwritten by Pungi in composes
 repos:
   - fedora-rawhide
-  # - fedora-41
-  # - fedora-41-updates
+  - fedora-41
+  - fedora-41-updates
