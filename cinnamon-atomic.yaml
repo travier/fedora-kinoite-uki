@@ -20,6 +20,5 @@ packages:
 
 # Kept in the leaf manifest as they are overwritten by Pungi in composes
 repos:
-  - fedora-rawhide
   - fedora-41
   - fedora-41-updates
