@@ -22,6 +22,7 @@ packages:
   - gnome-color-manager
   - gnome-control-center
   - gnome-disk-utility
+  - gnome-epub-thumbnailer
   - gnome-initial-setup
   - gnome-remote-desktop
   - gnome-session-wayland-session
@@ -29,8 +30,6 @@ packages:
   - gnome-shell
   - gnome-software
   - gnome-system-monitor
-  - gnome-terminal
-  - gnome-terminal-nautilus
   - gnome-user-docs
   - gnome-user-share
   - gvfs-afc
@@ -49,6 +48,7 @@ packages:
   - nautilus
   - plymouth-system-theme
   - polkit
+  - ptyxis
   - rygel
   - systemd-oomd-defaults
   - tracker
