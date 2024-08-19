@@ -80,6 +80,9 @@ packages:
   - langpacks-en
   # Workaround for https://github.com/ostreedev/ostree/issues/1469
   - add-determinism
+  # Kept for backward compatibility for AppImages
+  # See: https://gitlab.com/fedora/ostree/sig/-/issues/50
+  - fuse
 
 selinux: true
 documentation: true
