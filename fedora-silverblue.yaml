@@ -1,10 +1,1 @@
-variables:
-  bootable_container: false
-
-include:
-  - silverblue-common.yaml
-
-# Kept in the leaf manifest as they are overwritten by Pungi in composes
-repos:
-  - fedora-41
-  - fedora-41-updates
+silverblue-ostree.yaml
