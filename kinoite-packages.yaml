@@ -25,6 +25,7 @@ packages:
   - kde-settings-pulseaudio
   - kdebugsettings
   - kdegraphics-thumbnailers
+  - kdenetwork-filesharing
   - kdeplasma-addons
   - kdialog
   - kdnssd
@@ -70,6 +71,7 @@ packages:
   - plasma-workspace-wayland
   - plymouth-system-theme
   - polkit-kde
+  - samba-usershares
   - sddm
   - sddm-breeze
   - sddm-kcm
