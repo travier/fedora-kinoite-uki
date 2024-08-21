@@ -28,10 +28,8 @@ packages:
 packages-x86_64:
   - angelfish
   - arianna
-  - kaidan
   - tokodon
 packages-aarch64:
   - angelfish
   - arianna
-  - kaidan
   - tokodon
