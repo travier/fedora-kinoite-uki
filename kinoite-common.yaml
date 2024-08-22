@@ -45,12 +45,3 @@ exclude-packages:
   # Ensure we do not include X11 support
   - plasma-x11
   - plasma-workspace-x11
-
-# Kinoite specific workarounds and configuration
-postprocess:
-  - |
-    #!/bin/bash
-    set -xeuo pipefail
-
-    # Enable auto updates in Discover
-    echo -e "[Global]\nUseUnattendedUpdates=true\n" > /etc/xdg/PlasmaDiscoverUpdates
