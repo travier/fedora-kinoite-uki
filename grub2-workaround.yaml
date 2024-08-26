@@ -1,0 +1,22 @@
+# Temporarily disable new GRUB2 config options until we can ensure that we
+# have an updated bootloader via bootupd.
+# This is workaround for: https://bugzilla.redhat.com/show_bug.cgi?id=2305291
+# See: https://github.com/fedora-silverblue/issue-tracker/issues/587
+postprocess:
+  - |
+    #!/usr/bin/env bash
+    set -xeuo pipefail
+
+    # Completely disable this module
+    sed -i '2i exit 0' /etc/grub.d/25_bli
+
+    # Skip check that was not performed in previous Fedora versions
+    sed -i '/fwsetup --is-supported/d' /etc/grub.d/30_uefi-firmware
+    sed -i '/\tif/d'                   /etc/grub.d/30_uefi-firmware
+    sed -i '/\tfi/d'                   /etc/grub.d/30_uefi-firmware
+    sed -i 's/\t\t/\t/'                /etc/grub.d/30_uefi-firmware
+
+    # Verify that the content matches what we expect the file to look like.
+    # This will fail the build here instead of breaking users' systems.
+    hash="5a77a16c6a94e664e2e96a870f4531b9a0b4e63be1f46751d01e774629a8c84b"
+    echo "$hash  /etc/grub.d/30_uefi-firmware" | sha256sum -c

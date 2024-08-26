@@ -15,6 +15,8 @@ include:
   - initramfs.yaml
   # Read only sysroot
   - sysroot-ro.yaml
+  # Workaround for https://github.com/fedora-silverblue/issue-tracker/issues/587
+  - grub2-workaround.yaml
 
 # systemd-pcrphase module fails on ppc64le:
 # https://gitlab.com/fedora/ostree/sig/-/issues/44
