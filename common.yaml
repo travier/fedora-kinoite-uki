@@ -32,7 +32,6 @@ conditional-include:
   # Manifests included only for the Bootable Container variants
   - if: bootable_container == true
     include:
-      - composefs.yaml
       - bootc.yaml
       - dnf5.yaml
 
