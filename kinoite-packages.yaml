@@ -15,7 +15,6 @@ packages:
   - firewall-config
   - flatpak-kcm
   - fprintd-pam
-  - glibc-all-langpacks
   - kaccounts-integration-qt6
   - kcharselect
   - kde-connect

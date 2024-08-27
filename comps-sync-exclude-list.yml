@@ -183,6 +183,11 @@ desktop_exclude_list:
     - initial-setup-gui
     # Already included in all Atomic Desktops by default
     - toolbox
+    # Already included by default for all variants
+    - glibc-all-langpacks
+  kde-mobile:
+    # Already included by default for all variants
+    - glibc-all-langpacks
   xfce-desktop:
     # Incompatible with ostree for various reasons
     - abrt-desktop
