@@ -45,3 +45,5 @@ exclude-packages:
   # Ensure we do not include X11 support
   - plasma-x11
   - plasma-workspace-x11
+  # Exclude mariadb server tools that bring in Perl
+  - mariadb-server-utils
