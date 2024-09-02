@@ -3,50 +3,14 @@ variables:
   variant: "kinoite-mobile"
 
 include:
-  - common.yaml
-  - kinoite-mobile-packages.yaml
+  - kinoite-common.yaml
 
+# Override the default Kinoite ref from the kinoite-common.yaml manifest
 ref: fedora/41/${basearch}/kinoite-mobile
 rojig:
   name: fedora-kde
   summary: "Fedora Kinoite Mobile"
   license: MIT
-
-packages:
-  - fedora-release-kinoite
-  # Install some minor optional tools for KInfoCenter
-  - vulkan-tools
-  - xdpyinfo
-  # Includes a KIO & KCM (can not be Flatpak'ed), used by Dolphin and Gwenview
-  # See https://pagure.io/fedora-kde/SIG/issue/291
-  - kamera
-  # Make sure that previous Anaconda dependencies are kept in the image
-  # See: https://pagure.io/fedora-kde/SIG/issue/243
-  - bcache-tools
-  - dmraid
-  - mobile-broadband-provider-info
-  # Make sure that modem support is installed
-  - NetworkManager-ppp
-  # Install gdb to make getting backtraces work with DrKonqi
-  - gdb
-  # Explicitely not included via comps
-  # See: https://pagure.io/fedora-kde/SIG/issue/295
-  - plasma-welcome-fedora
-
-# Make sure the following are not pulled in when Recommended by other packages
-exclude-packages:
-  - plasma-discover-offline-updates
-  - plasma-discover-packagekit
-  - plasma-pk-updates
-  # Manually excluded as recommended by gtk3 (and likely gtk4 in the future)
-  # See https://pagure.io/fedora-kde/SIG/issue/124
-  - tracker
-  - tracker-miners
-  # Ensure we do not include X11 support
-  - plasma-x11
-  - plasma-workspace-x11
-  # Exclude mariadb server tools that bring in Perl
-  - mariadb-server-utils
 
 # Kept in the leaf manifest as they are overwritten by Pungi in composes
 repos:

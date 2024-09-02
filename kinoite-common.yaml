@@ -1,10 +1,15 @@
-variables:
-  variant: "kinoite"
-
 include:
   - common.yaml
-  - kinoite-packages.yaml
 
+conditional-include:
+  - if: variant == "kinoite"
+    include:
+      - kinoite-packages.yaml
+  - if: variant == "kinoite-mobile"
+    include:
+      - kinoite-mobile-packages.yaml
+
+# Default to Kinoite (Desktop). Overriden in the Kinoite Mobile manifest
 ref: fedora/41/${basearch}/kinoite
 rojig:
   name: fedora-kde
