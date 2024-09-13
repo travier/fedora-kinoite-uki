@@ -194,6 +194,7 @@ packages-x86_64:
   - cirrus-audio-firmware
   - hyperv-daemons
   - intel-audio-firmware
+  - intel-vsc-firmware
   - libva-intel-media-driver
   - mcelog
   - microcode_ctl
