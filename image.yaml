@@ -1,0 +1,3 @@
+composefs: signed
+rootfs: ext4verity
+compressor: xz

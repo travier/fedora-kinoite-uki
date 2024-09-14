@@ -1,0 +1,166 @@
+name: "Build Fedora Kinoite UKI image"
+
+env:
+  NAME: "fedora-kinoite-uki"
+  REGISTRY: "quay.io/travier"
+
+on:
+  # pull_request:
+  #   branches:
+  #     - main
+  push:
+    # branches:
+    #   - main
+  schedule:
+    - cron: '0 4 * * *'
+  workflow_dispatch:
+
+permissions: read-all
+
+# Prevent multiple workflow runs from racing to ensure that pushes are made
+# sequentialy for the main branch. Also cancel in progress workflow runs for
+# pull requests only.
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+jobs:
+  build-push-image:
+    runs-on: ubuntu-24.04
+    container:
+      image: quay.io/fedora-ostree-desktops/buildroot
+      options: --security-opt=label=disable --privileged --user 0:0 --device=/dev/kvm --device=/dev/fuse --volume /:/run/host:rw --volume /var/run/docker.sock:/var/run/docker.sock
+    steps:
+      - name: Reclaim disk space
+        run: |
+          dnf install -y moby-engine
+          docker image prune --all --force
+          rm -rf "/run/host/usr/local/lib/android"
+          dnf remove -y moby-engine
+
+      - name: Fixup containers/storage.conf
+        run: |
+          sed -i 's/driver = "overlay"/driver = "vfs"/' /usr/share/containers/storage.conf
+
+      - name: Fixup GitHub homedir
+        run: |
+          mkdir -p /github/home/.docker/
+
+      - name: Login to Container Registry
+        uses: redhat-actions/podman-login@v1
+        if: (github.event_name == 'push' || github.event_name == 'schedule' || github.event_name == 'workflow_dispatch')
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ secrets.BOT_USERNAME }}
+          password: ${{ secrets.BOT_SECRET }}
+          auth_file_path: /tmp/auth.json
+
+      - name: Install more packages
+        run: |
+          dnf install -y \
+            openssl \
+            sbsigntools \
+            systemd-ukify
+
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Generate ostree ed25519 signing key
+        run: |
+          openssl genpkey -algorithm ed25519 -outform PEM -out key
+          pubkey="$(openssl pkey -outform DER -pubout -in key | tail -c 32 | base64)"
+          sed -i "s|CHANGEME|${pubkey}|" composefs.yaml
+          seed="$(openssl pkey -outform DER -in key | tail -c 32 | base64)"
+          echo "${seed}${pubkey}" | base64 -d | base64 -w 0 > key.ed25519
+          rm key
+
+      - name: Compose ostree commit
+        run: |
+          mkdir -p repo cache logs
+          pushd repo > /dev/null || exit 1
+          ostree init --repo . --mode=bare-user
+          popd > /dev/null || exit 1
+          ostree --repo=repo config set 'core.fsync' 'false'
+          ARGS="--repo=repo --cachedir=cache --unified-core --force-nocache"
+          rpm-ostree compose tree ${ARGS} "manifest.yaml"
+
+      - name: Sign ostree commit
+        run: |
+          commit="$(cat repo/refs/heads/fedora/41/x86_64/kinoite)"
+          ostree sign \
+            --repo repo \
+            --sign-type ed25519 \
+            --keys-file key.ed25519 \
+            "$commit"
+          rm key.ed25519
+
+      - name: Generate and sign UKIs & systemd-boot
+        env:
+          DB_KEY: ${{ secrets.DB_KEY }}
+          DB_PEM: ${{ secrets.DB_PEM }}
+        run: |
+          echo "${DB_KEY}" > db.key
+          echo "${DB_PEM}" > db.pem
+          commit="$(cat repo/refs/heads/fedora/41/x86_64/kinoite)"
+          kernpath="$(ostree ls --repo "repo" "${commit}" /usr/lib/modules | sort -h | tail -1 | awk '{print $5}')"
+          kernver="$(basename "${kernpath}")"
+          ostree cat --repo "repo" "${commit}" "/usr/lib/modules/${kernver}/vmlinuz"       > vmlinuz
+          ostree cat --repo "repo" "${commit}" "/usr/lib/modules/${kernver}/initramfs.img" > initramfs
+          ostree cat --repo "repo" "${commit}" "/usr/lib/os-release"                       > os-release
+          mkdir -p "/usr/lib/systemd/boot/efi/"
+          ostree cat --repo "repo" "${commit}" "/usr/lib/systemd/boot/efi/addonx64.efi.stub"   > /usr/lib/systemd/boot/efi/addonx64.efi.stub
+          ostree cat --repo "repo" "${commit}" "/usr/lib/systemd/boot/efi/linuxx64.efi.stub"   > /usr/lib/systemd/boot/efi/linuxx64.efi.stub
+          ostree cat --repo "repo" "${commit}" "/usr/lib/systemd/boot/efi/systemd-bootx64.efi" > /usr/lib/systemd/boot/efi/systemd-bootx64.efi
+          for n in 0 1; do
+          cmdline="rootflags=subvol=root rhgb quiet rw intel_iommu=on mitigations=off tsx=off pti=on vconsole.keymap=fr vconsole.font=eurlatgr"
+          ostree="ostree=/ostree/boot.$n/fedora/$(cat vmlinuz initramfs | sha256sum | awk '{print $1}')/0"
+          ukify build \
+              --linux "vmlinuz" \
+              --initrd "initramfs" \
+              --cmdline "$cmdline $ostree" \
+              --os-release "@os-release" \
+              --uname "$kernver" \
+              --signtool sbsign \
+              --secureboot-private-key "db.key" \
+              --secureboot-certificate "db.pem" \
+              --output "uki.$n" \
+              --measure
+          done
+          sbsign \
+            --key "db.key" \
+            --cert "db.pem" \
+            --output "systemd-bootx64-signed.efi" \
+            "/usr/lib/systemd/boot/efi/systemd-bootx64.efi"
+          rm db.key db.pem
+
+      - name: Encapsultate in a container image
+        run: |
+          commit="$(cat repo/refs/heads/fedora/41/x86_64/kinoite)"
+          rpm-ostree compose container-encapsulate \
+            --repo="repo" \
+            "${commit}" \
+            oci-archive:fedora-kinoite.ociarchive:latest
+
+      - name: Push to container image to container registry
+        run: |
+          buildid="$(cat builds/builds.json | jq -r '.builds[0].id')"
+          skopeo copy \
+            --authfile /tmp/auth.json \
+            --retry-times 3 \
+            --dest-compress-format zstd \
+            oci-archive:fedora-kinoite.ociarchive \
+            docker://quay.io/travier/fedora-kinoite-uki:latest
+
+      - name: Push UKI to Container Registry
+        run: |
+          container="$(buildah from scratch)"
+          buildah copy "${container}" "uki.0" /
+          buildah copy "${container}" "uki.1" /
+          buildah copy "${container}" "systemd-bootx64-signed.efi" /
+          commit="$(buildah commit ${container})"
+          buildah push \
+            --authfile /tmp/auth.json \
+            --retry 3 \
+            --compression-format zstd \
+            ${commit} \
+            docker://quay.io/travier/fedora-kinoite-uki:latest-uki

@@ -1,0 +1,46 @@
+include:
+  - kinoite.yaml
+  - composefs.yaml
+
+# TODO: Add ostree-layers support
+# ostree-layers:
+#   - overlay/01config
+#   - overlay/08composefs
+
+# Let's install some more packages until we're ready to put them all in systemd-sysexts
+packages:
+  - iwd
+  - krb5-workstation
+  - libvirt-daemon
+  - libvirt-daemon
+  - libvirt-daemon-config-network
+  - libvirt-daemon-driver-interface
+  - libvirt-daemon-driver-network
+  - libvirt-daemon-driver-nodedev
+  - libvirt-daemon-driver-nwfilter
+  - libvirt-daemon-driver-qemu
+  - libvirt-daemon-driver-secret
+  - libvirt-daemon-driver-storage-core
+  - libvirt-dbus
+  - netcat
+  - qemu-kvm
+  - vim
+  - wireguard-tools
+  - zsh
+  - systemd-boot-unsigned
+
+# Cleanup some SetUID bit binaries
+postprocess:
+  - |
+    #!/usr/bin/env bash
+    set -xeuo pipefail
+
+    chmod ug-s \
+        /usr/bin/chage \
+        /usr/bin/chfn \
+        /usr/bin/chsh \
+        /usr/bin/gpasswd \
+        /usr/bin/ksu \
+        /usr/bin/newgrp \
+        /usr/bin/passwd \
+        /usr/bin/vmware-user-suid-wrapper
