@@ -82,6 +82,7 @@ packages:
   # Kept for backward compatibility for AppImages
   # See: https://gitlab.com/fedora/ostree/sig/-/issues/50
   - fuse
+  - fuse-libs
 
 selinux: true
 documentation: true
