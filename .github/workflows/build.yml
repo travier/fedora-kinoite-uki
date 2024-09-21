@@ -77,14 +77,28 @@ jobs:
           echo "${seed}${pubkey}" | base64 -d | base64 -w 0 > key.ed25519
           rm key
 
-      - name: Compose ostree commit
+      - name: Prepare repo
         run: |
           mkdir -p repo cache logs
           pushd repo > /dev/null || exit 1
           ostree init --repo . --mode=bare-user
           popd > /dev/null || exit 1
           ostree --repo=repo config set 'core.fsync' 'false'
-          ARGS="--repo=repo --cachedir=cache --unified-core --force-nocache"
+
+      - name: Prepare overlays
+        run: |
+          for overlay in 01config 08composefs; do
+            ostree commit \
+              --repo=repo \
+              --tree=dir=overlay.d/${overlay} \
+              --branch="overlay/${overlay}" \
+              --owner-uid 0 --owner-gid 0 --no-xattrs --no-bindings --parent=none \
+              --mode-ro-executables
+          done
+
+      - name: Compose ostree commit
+        run: |
+          ARGS="--repo=repo --layer-repo=repo --cachedir=cache --unified-core --force-nocache"
           rpm-ostree compose tree ${ARGS} "manifest.yaml"
 
       - name: Sign ostree commit

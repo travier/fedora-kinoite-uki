@@ -2,10 +2,9 @@ include:
   - kinoite.yaml
   - composefs.yaml
 
-# TODO: Add ostree-layers support
-# ostree-layers:
-#   - overlay/01config
-#   - overlay/08composefs
+ostree-layers:
+  - overlay/01config
+  - overlay/08composefs
 
 # Let's install some more packages until we're ready to put them all in systemd-sysexts
 packages:
