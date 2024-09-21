@@ -159,8 +159,8 @@ jobs:
             oci-archive:fedora-kinoite.ociarchive:latest
 
       - name: Push to container image to container registry
+        id: push
         run: |
-          buildid="$(cat builds/builds.json | jq -r '.builds[0].id')"
           skopeo copy \
             --authfile /tmp/auth.json \
             --retry-times 3 \
@@ -177,6 +177,7 @@ jobs:
           COSIGN_PRIVATE_KEY: ${{ secrets.COSIGN_PRIVATE_KEY }}
 
       - name: Push UKI to Container Registry
+        id: push-uki
         run: |
           container="$(buildah from scratch)"
           buildah copy "${container}" "uki.0" /
