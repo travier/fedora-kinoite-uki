@@ -6,6 +6,15 @@
     ],
     "transports": {
         "docker": {
+            "quay.io/travier/fedora-kinoite-uki": [
+                {
+                    "type": "sigstoreSigned",
+                    "keyPath": "/etc/pki/containers/quay.io-travier-fedora-kinoite.pub",
+                    "signedIdentity": {
+                        "type": "matchRepository"
+                    }
+                }
+            ],
             "quay.io/travier/fedora-kinoite": [
                 {
                     "type": "sigstoreSigned",

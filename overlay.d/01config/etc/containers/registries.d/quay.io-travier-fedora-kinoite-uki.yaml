@@ -1,0 +1,3 @@
+docker:
+  quay.io/travier/fedora-kinoite-uki:
+    use-sigstore-attachments: true

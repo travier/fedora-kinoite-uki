@@ -55,6 +55,9 @@ jobs:
           password: ${{ secrets.BOT_SECRET }}
           auth_file_path: /tmp/auth.json
 
+      - uses: sigstore/cosign-installer@v3.6.0
+        if: (github.event_name == 'push' || github.event_name == 'schedule' || github.event_name == 'workflow_dispatch') && github.ref == 'refs/heads/main'
+
       - name: Install more packages
         run: |
           dnf install -y \
@@ -151,6 +154,14 @@ jobs:
             oci-archive:fedora-kinoite.ociarchive \
             docker://quay.io/travier/fedora-kinoite-uki:latest
 
+      - name: Sign ostree container image
+        if: (github.event_name == 'push' || github.event_name == 'schedule' || github.event_name == 'workflow_dispatch') && github.ref == 'refs/heads/main'
+        run: |
+          cosign sign -y --key env://COSIGN_PRIVATE_KEY ${{ env.REGISTRY }}/${{ env.NAME }}:latest
+        env:
+          COSIGN_EXPERIMENTAL: false
+          COSIGN_PRIVATE_KEY: ${{ secrets.COSIGN_PRIVATE_KEY }}
+
       - name: Push UKI to Container Registry
         run: |
           container="$(buildah from scratch)"
@@ -164,3 +175,11 @@ jobs:
             --compression-format zstd \
             ${commit} \
             docker://quay.io/travier/fedora-kinoite-uki:latest-uki
+
+      - name: Sign UKI container image
+        if: (github.event_name == 'push' || github.event_name == 'schedule' || github.event_name == 'workflow_dispatch') && github.ref == 'refs/heads/main'
+        run: |
+          cosign sign -y --key env://COSIGN_PRIVATE_KEY ${{ env.REGISTRY }}/${{ env.NAME }}:latest-uki
+        env:
+          COSIGN_EXPERIMENTAL: false
+          COSIGN_PRIVATE_KEY: ${{ secrets.COSIGN_PRIVATE_KEY }}
