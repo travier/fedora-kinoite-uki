@@ -1,6 +1,5 @@
 include:
   - kinoite.yaml
-  - composefs.yaml
 
 ostree-layers:
   - overlay/01config

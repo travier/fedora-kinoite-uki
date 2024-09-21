@@ -72,7 +72,7 @@ jobs:
         run: |
           openssl genpkey -algorithm ed25519 -outform PEM -out key
           pubkey="$(openssl pkey -outform DER -pubout -in key | tail -c 32 | base64)"
-          sed -i "s|CHANGEME|${pubkey}|" composefs.yaml
+          echo "${pubkey}" > overlay.d/08composefs/etc/ostree/initramfs-root-binding.key
           seed="$(openssl pkey -outform DER -in key | tail -c 32 | base64)"
           echo "${seed}${pubkey}" | base64 -d | base64 -w 0 > key.ed25519
           rm key
