@@ -85,9 +85,9 @@ jobs:
           popd > /dev/null || exit 1
           ostree --repo=repo config set 'core.fsync' 'false'
 
-      - name: Prepare overlays
+      - name: Prepare overlays and overrides
         run: |
-          for overlay in 01config 08composefs; do
+          for overlay in 01config 08composefs 99overrides; do
             ostree commit \
               --repo=repo \
               --tree=dir=overlay.d/${overlay} \

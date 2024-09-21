@@ -5,6 +5,9 @@ ostree-layers:
   - overlay/01config
   - overlay/08composefs
 
+ostree-override-layers:
+  - overlay/99overrides
+
 # Let's install some more packages until we're ready to put them all in systemd-sysexts
 packages:
   - iwd
