@@ -26,7 +26,6 @@ packages:
   - netcat
   - qemu-kvm
   - vim
-  - wireguard-tools
   - zsh
   - systemd-boot-unsigned
 
